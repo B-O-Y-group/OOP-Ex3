@@ -1,5 +1,5 @@
 from abc import ABC
-import Node
+from Node import *
 from GraphInterface import *
 
 
@@ -37,8 +37,10 @@ class DiGraph(GraphInterface, ABC):
             return True
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-        self.nodes[id] = Node(id, pos)
-        list.count(node_id)
+        self.nodes[node_id] = Node(node_id, pos)
+
+        # Node(node_id, pos)
+        # list.count(node_id)
         self.MC += 1
         return True
 
@@ -58,3 +60,12 @@ class DiGraph(GraphInterface, ABC):
 
     def __str__(self):
         return f"nodes: {self.nodes}\nedges: {self.edges}"
+
+
+if __name__ == '__main__':
+    g = DiGraph()
+    pos = (1, 2, 3)
+
+    g.add_node(1, pos)
+
+    print(g)

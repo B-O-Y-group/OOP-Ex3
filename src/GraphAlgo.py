@@ -3,8 +3,8 @@ from abc import ABC
 from src import GraphInterface
 from src.GraphAlgoInterface import GraphAlgoInterface
 import json
-import DiGraph
-import Node
+from DiGraph import *
+from Node import *
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
@@ -31,6 +31,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
         for e in dic["Edges"].values():
             self.graph.add_edge(id1=["src"], id2=["dest"], weight=["w"])
+
+            if self.graph == None:
+                return False
         return True
 
     def save_to_json(self, file_name: str) -> bool:
@@ -38,16 +41,26 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             ## indenter is number rof space
             ## default= lambda  o :o.__dict__ taking the self and change him to dictionaries
             json.dump(self, filePointer=f, indent=4, default=lambda o: o.__dict__)
+        return True
+
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        pass
+
+        
 
     def plot_graph(self) -> None:
         pass
 
 
 if __name__ == '__main__':
-    g = DiGraph
+    g = DiGraph()
     pos = (1, 2, 3)
-    node = Node(1, pos)
-    g.DiGraph.add_node(node)
+
+    g.add_node(1, pos)
+    g.add_node(2, pos)
+
+    print(g)
+
+    g.add_edge(1, 2, 0)
+    g.add_edge(2, 1, 0)
+    print(g)
