@@ -3,6 +3,8 @@ from abc import ABC
 from src import GraphInterface
 from src.GraphAlgoInterface import GraphAlgoInterface
 import json
+import DiGraph
+import Node
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
@@ -45,4 +47,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
 
 if __name__ == '__main__':
-
+    g = DiGraph
+    pos = (1, 2, 3)
+    node = Node(1, pos)
+    g.DiGraph.add_node(node)

@@ -1,15 +1,6 @@
 from abc import ABC
-
+import Node
 from GraphInterface import *
-
-
-class Node:
-    def __init__(self, id, pos: tuple):
-        self.id = id
-        self.pos = pos
-
-    def __repr__(self):
-        return f"id: {self.id}, pos: {self.pos}"
 
 
 class DiGraph(GraphInterface, ABC):
