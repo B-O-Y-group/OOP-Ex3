@@ -1,4 +1,5 @@
 from abc import ABC
+
 from Node import *
 from GraphInterface import *
 
@@ -20,10 +21,10 @@ class DiGraph(GraphInterface, ABC):
         return dict(dict_nodes)
 
     def all_in_edges_of_node(self, id1: int) -> dict:
-        pass
+        return None
 
     def all_out_edges_of_node(self, id1: int) -> dict:
-        pass
+        return None
 
     def get_mc(self) -> int:
         return self.MC
