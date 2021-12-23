@@ -1,3 +1,4 @@
+import copy
 from abc import ABC
 
 from src import GraphInterface
@@ -5,7 +6,7 @@ from src.GraphAlgoInterface import GraphAlgoInterface
 import json
 from DiGraph import *
 from Node import *
-
+from PriorityQueue import  *
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
@@ -48,7 +49,32 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         except Exception:
             return False
 
+    def dijkstra(self, id1: int, id2: int) -> float:
+
+        # the same vertex
+        if id1 == id2:
+            return 0
+
+        graph = copy.deepcopy(self.get_graph())
+
+        # create al list of vizted
+        visited = []
+
+        i = 0
+        while i < graph.v_size():
+            visited.append(0)
+            i = i + 1
+
+        visited[id1] = 1
+
+        queue = PriorityQueue()
+
+
+
+        pass
+
     def shortest_path(self, id1: int, id2: int) -> (float, list):
+        pass
 
     def plot_graph(self) -> None:
         pass
@@ -65,8 +91,20 @@ if __name__ == '__main__':
 
     g.add_edge(1, 2, 0)
     g.add_edge(2, 1, 0)
+    g.add_node(3, pos)
     # print(g)
 
     algo = GraphAlgo(g)
 
-    print(algo.get_graph())
+    # print(algo.get_graph())
+
+    graph = copy.deepcopy(g)
+
+    visited = []
+    i = 0
+    while i < graph.v_size():
+        visited.append(0)
+        i = i + 1
+
+    visited[0] = 1
+    print(visited)

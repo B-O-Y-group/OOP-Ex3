@@ -10,10 +10,10 @@ class DiGraph(GraphInterface, ABC):
         self.edges = {}
 
     def v_size(self) -> int:
-        return list.count(self.nodes)
+        return self.nodes.__len__()
 
     def e_size(self) -> int:
-        return list.count(self.edges)
+        return self.edges.__len__()
 
     def get_all_v(self) -> dict:
         dict_nodes = {i: self.nodes.keys() for i in range(0, len(self.nodes))}

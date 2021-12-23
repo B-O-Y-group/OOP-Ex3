@@ -1,18 +1,36 @@
-
-
 class Node:
     def __init__(self, id: int, pos: tuple):
         self.id = id
         self.pos = pos
+        self.weight = 99999999999999999
+        self.tag = 0
+
+    def get_weight(self):
+        return self.weight
+
+    def set_weight(self, data: int):
+        self.weight = data
+
+
+    def get_tag(self):
+        return self.tag
+
+
+    # white = 0 , gey  =1 , black = 2
+    def set_tag(self, color: int ):
+        self.tag = color
+
+
 
     def __repr__(self):
-        return f"id: {self.id}, pos: {self.pos}"
+        return f"id: {self.id}, pos: {self.pos} weight: {self.weight}"
 
 
 if __name__ == '__main__':
     pos = (1, 2, 3)
     node = Node(1, pos)
 
-    print(node)
+    print(node.weight)
 
-
+    node.set_weight(0)
+    print(node.weight)
