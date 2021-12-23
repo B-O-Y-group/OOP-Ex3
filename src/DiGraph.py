@@ -7,13 +7,14 @@ class DiGraph(GraphInterface, ABC):
     def __init__(self):
         self.MC = 0
         self.nodes = {}
-        self.edges = {}
+        self.edges_out = {}
+        self.edges_in = {}
 
     def v_size(self) -> int:
         return self.nodes.__len__()
 
     def e_size(self) -> int:
-        return self.edges.__len__()
+        return self.edges_out.__len__()
 
     def get_all_v(self) -> dict:
         dict_nodes = {i: self.nodes.keys() for i in range(0, len(self.nodes))}
@@ -24,16 +25,20 @@ class DiGraph(GraphInterface, ABC):
         return None
 
     def all_out_edges_of_node(self, id1: int) -> dict:
-        pass
+
+        return self.edges_out
 
     def get_mc(self) -> int:
         return self.MC
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         if id1 in self.nodes and id2 in self.nodes:  # by key
-            if id1 not in self.edges:
-                self.edges[id1] = {}  # create new
-            self.edges[id1][id2] = weight
+            if id1 not in self.edges_out:
+                self.edges_out[id1] = {}  # create new
+            if id2 not in self.edges_in:
+                self.edges_in[id2] = {}
+            self.edges_out[id1][id2] = weight
+            self.edges_in[id2][id1] = weight
             self.MC += 1
             return True
 
@@ -53,14 +58,14 @@ class DiGraph(GraphInterface, ABC):
             print("This node does not exist")
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
-        if self.edges.keys() in self.edges:
+        if self.edges_out.keys() in self.edges_out:
             self.MC += 1
-            return self.edges.pop()
+            return self.edges_out.pop()
         else:
             print("This edge does not exist")
 
     def __str__(self):
-        return f"nodes: {self.nodes}\nedges: {self.edges}"
+        return f"nodes: {self.nodes}\nedges: {self.edges_out}"
 
 
 if __name__ == '__main__':
@@ -68,5 +73,11 @@ if __name__ == '__main__':
     pos = (1, 2, 3)
 
     g.add_node(1, pos)
+    g.add_node(2)
+    g.add_node(3)
+    g.add_edge(1, 2, 0)
+    g.add_edge(1, 3, 0)
+    list = g.all_out_edges_of_node(1)
+    print(list)
 
-    print(g)
+    # print(g)
