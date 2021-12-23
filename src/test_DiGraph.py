@@ -197,8 +197,9 @@ class TestDiGraph(TestCase):
         print("Passed All!")
 
     def test_add_edge(self):
-        """#------> init graph with nodes [0,1,2,3,4] """
+
         graph_1: DiGraph = DiGraph()
+        """#------> init graph with nodes [0,1,2,3,4] """
         for i in range(5):
             graph_1.add_node(1)
 
@@ -260,7 +261,55 @@ class TestDiGraph(TestCase):
         print("Passed All!")
 
     def test_remove_node(self):
-        self.fail()
+
+        graph_1: DiGraph = DiGraph()
+        """#----> INIT graph with nodes [0-4]"""
+        for i in range(5):
+            graph_1.add_node(i)
+
+        print("remove_node -> test 1")
+        """# remove node that does not exist in graph. expected -> FALSE + PRINT("node is missing in graph")"""
+        self.assertFalse(graph_1.remove_node(99))
+        print("Passed!")
+
+        print("remove_node -> test 2")
+        """# remove one existing node from graph. expected -> TRUE """
+        self.assertTrue(graph_1.remove_node(1))
+        print("Passed!")
+
+        print("remove_node -> test 3")
+        """# try to remove the same node from above. expected -> FALSE + PRINT("node is missing in graph") """
+        self.assertFalse(graph_1.remove_node(1))
+        print("Passed All!")
 
     def test_remove_edge(self):
-        self.fail()
+        graph_1: DiGraph = DiGraph()
+        """#----> INIT graph with nodes [0-4] and edges [{1-2} {2-1} {1-3} {2-3} {2-4} {4-1}"""
+        for i in range(5):
+            graph_1.add_node(i)
+        graph_1.add_edge(1, 2, 0)
+        graph_1.add_edge(2, 1, 0)
+        graph_1.add_edge(1, 3, 0)
+        graph_1.add_edge(2, 3, 0)
+        graph_1.add_edge(2, 4, 0)
+        graph_1.add_edge(4, 1, 0)
+
+        print("remove_edge -> test 1")
+        """# try to remove edge {1-2}. expected -> TRUE """
+        self.assertTrue(graph_1.remove_edge(1, 2))
+        print("Passed!")
+
+        print("remove_edge -> test 2")
+        """try to remove again the same edge {1,2}. expected -> FALSE + PRINT("this edge is missing in graph")"""
+        self.assertFalse(graph_1.remove_edge(1, 2))
+        print("Passed!")
+
+        print("remove_edge -> test 3")
+        """# try to remove opposite direction from prev edge ({2-1}). expected -> TRUE """
+        self.assertTrue(graph_1.remove_edge(2, 1))
+        print("Passed!")
+
+        print("remove_edge -> test 4")
+        """try to remove edge that do no exist in graph. expected -> FALSE + PRINT("this edge is missing in graph")"""
+        self.assertFalse(graph_1.remove_edge(99, 93))
+        print("Passed All!")
