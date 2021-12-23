@@ -25,7 +25,6 @@ class TestDiGraph(TestCase):
         graph_2: DiGraph = DiGraph()
         self.assertEqual(0, graph_2.v_size())
 
-
         ## ------> FAILED FROM HERE!
         # try to remove one existing node, node size should be (2).
         graph_1.remove_node(1)
@@ -38,9 +37,6 @@ class TestDiGraph(TestCase):
         # try to remove a known non-existing node, should not effect node_size.
         graph_1.remove_node(99999)
         self.assertEqual(2, graph_1.v_size())
-
-
-
 
     def test_e_size(self):
         graph_1: DiGraph = DiGraph()
@@ -68,7 +64,6 @@ class TestDiGraph(TestCase):
         graph_1.add_edge(3, 4, 10)
         self.assertEqual(3, graph_1.e_size())
 
-
         ## --------> FAILED FROM HERE!
 
         # try to remove valid edge from graph, edge size should be (2) [decreased by 1]
@@ -77,8 +72,8 @@ class TestDiGraph(TestCase):
         self.assertEqual(2, graph_1.e_size())
         self.assertEqual(4, graph_1.v_size())
 
-
-        # try to remove invalid edge (src == dest), should not effect edge_size (3) and node size(4).
+        # try to remove invalid edge (src == dest), should not effect edge_size (3)
+        # and node size(4).
         graph_1.remove_edge(1, 1)
         self.assertEqual(3, graph_1.e_size())
         self.assertEqual(4, graph_1.v_size())
@@ -100,13 +95,64 @@ class TestDiGraph(TestCase):
         self.fail()
 
     def test_get_mc(self):
-        self.fail()
+        graph_1: DiGraph = DiGraph()
+
+        # adding 10 new nodes. expected mc+=10 (total 10)
+        for i in range(10):
+            graph_1.add_node(i, (0, 0, 0))
+
+        self.assertEqual(10, graph_1.get_mc())
+
+        # adding same nodes twice [0 - 4]
+        graph_2: DiGraph = DiGraph()
+        flag = True
+        for i in range(10):
+            if i == 5 and flag:
+                flag = False
+                i = 0
+            graph_2.add_node(i, (0, 0, 0,))
+        self.assertEqual(10, graph_2.get_mc())
+
+        # removing all nodes from graph_2. expected -> mc+=10 (total 20)
+        for i in range(10):
+            graph_2.remove_node(i)
+
+        self.assertEqual(20, graph_2.get_mc())
+
+        # adding 10 valid edges to graph_1 (notice edge 1-1 should not count) . expected ->  mc+=9 (total 19)
+        for i in range(10):
+            graph_1.add_edge(1, i, 2)
+        self.assertEqual(19, graph_1.get_mc())
+
+        # adding 5 invalid edges to graph_1. expected -> mc+=0 (total 19)
+        for i in range(90, 95):
+            graph_1.add_edge(20, i, 2)
+        self.assertEqual(19, graph_1.get_mc())
+
+        # remove valid edge from graph_1. expected -> mc += 1 (total 20)
+        graph_1.remove_edge(1, 2)
+        self.assertEqual(20, graph_1.get_mc())
+
+        # remove invalid edge from graph_1. expected -> mc+=0 (total 20)
+        graph_1.remove_edge(99, 100)
+        self.assertEqual(20, graph_1.get_mc())
 
     def test_add_edge(self):
         self.fail()
 
     def test_add_node(self):
-        self.fail()
+        graph_1: DiGraph = DiGraph()
+        # adding one valid node. expected -> TRUE
+        self.assertTrue(graph_1.add_node(1, (0, 0, 0)))
+
+        # adding the same existing node. expected -> FALSE + print "node id already exists"
+        self.assertFalse(graph_1.add_node(1, (0, 0, 0)))
+
+        # adding new node with same pos as another. expected -> TRUE
+        self.assertTrue(graph_1.add_node(2, (0, 0, 0)))
+
+        # adding new node without declare pos. expected -> True
+        self.assertTrue(graph_1.add_node(3))
 
     def test_remove_node(self):
         self.fail()
