@@ -20,7 +20,8 @@ class DiGraph(GraphInterface, ABC):
         return dict(dict_nodes)
 
     def all_in_edges_of_node(self, id1: int) -> dict:
-        pass
+        node_in = {self.nodes.get(id1): {self.nodes.get(id2):self.edges(id1,id2)}}
+        return node_in
 
     def all_out_edges_of_node(self, id1: int) -> dict:
         pass
