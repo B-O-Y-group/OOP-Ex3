@@ -97,7 +97,7 @@ class TestDiGraph(TestCase):
     def test_get_mc(self):
         graph_1: DiGraph = DiGraph()
 
-        # adding 10 new nodes
+        # adding 10 new nodes. expected mc+=10 (total 10)
         for i in range(10):
             graph_1.add_node(i, (0, 0, 0))
 
@@ -113,17 +113,46 @@ class TestDiGraph(TestCase):
             graph_2.add_node(i, (0, 0, 0,))
         self.assertEqual(10, graph_2.get_mc())
 
-        # removing all nodes from graph_2. expected - mc+=10
+        # removing all nodes from graph_2. expected -> mc+=10 (total 20)
         for i in range(10):
             graph_2.remove_node(i)
 
         self.assertEqual(20, graph_2.get_mc())
 
+        # adding 10 valid edges to graph_1 (notice edge 1-1 should not count) . expected ->  mc+=9 (total 19)
+        for i in range(10):
+            graph_1.add_edge(1, i, 2)
+        self.assertEqual(19, graph_1.get_mc())
+
+        # adding 5 invalid edges to graph_1. expected -> mc+=0 (total 19)
+        for i in range(90, 95):
+            graph_1.add_edge(20, i, 2)
+        self.assertEqual(19, graph_1.get_mc())
+
+        # remove valid edge from graph_1. expected -> mc += 1 (total 20)
+        graph_1.remove_edge(1, 2)
+        self.assertEqual(20, graph_1.get_mc())
+
+        # remove invalid edge from graph_1. expected -> mc+=0 (total 20)
+        graph_1.remove_edge(99, 100)
+        self.assertEqual(20, graph_1.get_mc())
+
     def test_add_edge(self):
         self.fail()
 
     def test_add_node(self):
-        self.fail()
+        graph_1: DiGraph = DiGraph()
+        # adding one valid node. expected -> TRUE
+        self.assertTrue(graph_1.add_node(1, (0, 0, 0)))
+
+        # adding the same existing node. expected -> FALSE + print "node id already exists"
+        self.assertFalse(graph_1.add_node(1, (0, 0, 0)))
+
+        # adding new node with same pos as another. expected -> TRUE
+        self.assertTrue(graph_1.add_node(2, (0, 0, 0)))
+
+        # adding new node without declare pos. expected -> True
+        self.assertTrue(graph_1.add_node(3))
 
     def test_remove_node(self):
         self.fail()
