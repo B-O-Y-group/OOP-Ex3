@@ -26,7 +26,7 @@ class DiGraph(GraphInterface, ABC):
 
     def all_out_edges_of_node(self, id1: int) -> dict:
 
-        return self.edges_out
+        return self.edges_out.get(id1)
 
     def get_mc(self) -> int:
         return self.MC
