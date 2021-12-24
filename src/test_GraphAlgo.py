@@ -145,12 +145,61 @@ class TestGraphAlgo(TestCase):
         self.assertFalse(new_graph.remove_node(5))
         print("Passed All!")
 
-
     def test_save_to_json(self):
         self.fail()
 
     def test_shortest_path(self):
-        self.fail()
+
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        for i in range(6):
+            graph.add_node(i)
+        graph.add_edge(0, 2, 5)
+        graph.add_edge(1, 0, 42)
+        graph.add_edge(1, 3, 5)
+        graph.add_edge(2, 0, 7)
+        graph.add_edge(2, 5, 1)
+        graph.add_edge(3, 1, 11)
+        graph.add_edge(3, 2, 1)
+        graph.add_edge(3, 4, 3)
+        graph.add_edge(4, 5, 1)
+        graph.add_edge(5, 3, 5)
+
+        print("shortest_path -> test 1")
+        """# shortest path from src:4 to dest:0. expected -> value (14) path{4,5,3,2,0}"""
+        self.assertEqual((14, [4, 5, 3, 2, 0]), graph_algo.shortest_path(4, 0))
+        print("Passed!")
+
+        print("shortest_path -> test 2")
+        """# shortest path from src:0 to dest:1. expected -> value (22) path{0,2,5,3,1}"""
+        self.assertEqual((22, [0, 2, 5, 3, 1]), graph_algo.shortest_path(0, 1))
+        print("Passed!")
+
+        print("shortest_path -> test 3")
+        """# shortest path from src:2 to dest:1. expected -> value (17) path{2,5,3,1}"""
+        self.assertEqual((17, [2, 5, 3, 1]), graph_algo.shortest_path(2, 1))
+        print("Passed!")
+
+        print("shortest_path -> test 4")
+        """# shortest path from src:10 (do not exist in graph) dest:2. expected -> value (infinity) path{}"""
+        self.assertEqual((float('inf'), []), graph_algo.shortest_path(10, 2))
+        print("Passed!")
+
+        """# INIT graph T0.json"""
+        graph_t0: GraphInterface = DiGraph()
+        graph_t0_algo: GraphAlgoInterface = GraphAlgo(graph_t0)
+        graph_t0_algo.load_from_json("data/T0.json")
+
+        print("shortest_path -> test 5 <T0.json>")
+        """# shortest path in T0.json from src:0 des:3. expected -> value(2.8) path {0,1,3}"""
+        self.assertEqual((2.8, [0, 1, 3]), graph_algo.shortest_path(0, 3))
+        print("Passed!")
+
+        print("shortest_path -> test 6 <T0.json>")
+        """# shortest path in T0.json from src:3 dest:0. expected -> value(infinity) path{}"""
+        self.assertEqual((float('inf'), []), graph_algo.shortest_path(3, 0))
+        print("Passed All!")
 
     def test_center_point(self):
         self.fail()
