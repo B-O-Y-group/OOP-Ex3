@@ -103,19 +103,19 @@ class TestDiGraph(TestCase):
         print("Passed!")
 
         print("e_size -> test 7")
-        """ # try to remove invalid edge (src == dest), should not effect edge_size (3)
+        """ # try to remove invalid edge (src == dest), should not effect edge_size (2)
             # and node size(4)."""
         graph_1.remove_edge(1, 1)
-        self.assertEqual(3, graph_1.e_size())
+        self.assertEqual(2, graph_1.e_size())
         self.assertEqual(4, graph_1.v_size())
         print("Passed!")
 
         print("e_size -> test 8")
-        """# remove non existing edge, should not effect edge_size (3) and node size(4)."""
+        """# remove non existing edge, should not effect edge_size (2) and node size(4)."""
         graph_1.remove_edge(2, 1)
-        self.assertEqual(3, graph_1.e_size())
+        self.assertEqual(2, graph_1.e_size())
         graph_1.remove_edge(100000, 999999)
-        self.assertEqual(3, graph_1.e_size())
+        self.assertEqual(2, graph_1.e_size())
         self.assertEqual(4, graph_1.v_size())
         print("Passed!")
 

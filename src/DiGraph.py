@@ -9,16 +9,17 @@ class DiGraph(GraphInterface, ABC):
         self.nodes = {}
         self.edges_out = {}
         self.edges_in = {}
-
-
+        self.edges_out.values().__len__()
 
     def v_size(self) -> int:
         return self.nodes.__len__()
 
     def e_size(self) -> int:
         e_size_list = []
-        for e in self.edges_out:
-            e_size_list.append(e)
+        print(self.edges_out.values().__len__())
+        for v in self.edges_out:
+            for i in self.edges_out[v]:
+                e_size_list.append(i)
         return e_size_list.__len__()
 
     def get_all_v(self) -> dict:
@@ -54,7 +55,6 @@ class DiGraph(GraphInterface, ABC):
         self.edges_out[id1][id2] = weight
         self.edges_in[id2][id1] = weight
         self.MC += 1
-
 
         # self.edges_out[id1].update({id2: weight})
         # self.edges_in[id2].update({id1: weight})
@@ -110,8 +110,6 @@ class DiGraph(GraphInterface, ABC):
         return f"nodes: {self.nodes}\nedges: {self.edges_out}"
 
 
-
-
 if __name__ == '__main__':
     g = DiGraph()
     pos = (1, 2, 3)
@@ -124,5 +122,3 @@ if __name__ == '__main__':
     # print(list)
     #
     # print(g)
-
-
