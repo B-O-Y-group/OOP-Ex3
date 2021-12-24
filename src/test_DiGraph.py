@@ -279,7 +279,7 @@ class TestDiGraph(TestCase):
         graph_1: DiGraph = DiGraph()
         """#------> init graph with nodes [0,1,2,3,4] """
         for i in range(5):
-            graph_1.add_node(1)
+            graph_1.add_node(i)
 
         print("add_edge -> test 1")
         """# adding valid edges. expected -> TRUE """
