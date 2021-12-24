@@ -12,11 +12,11 @@ class PriorityQueue(object):
         return len(self.queue) == 0
 
     # for inserting an element in the queue
-    def insert(self, data):
+    def add(self, data):
         self.queue.append(data)
 
     # for popping an element based on Priority
-    def delete(self):
+    def pop(self):
         try:
             min = 0
             for i in range(len(self.queue)):
@@ -32,10 +32,10 @@ class PriorityQueue(object):
 
 if __name__ == '__main__':
     myQueue = PriorityQueue()
-    myQueue.insert(12)
-    myQueue.insert(1)
-    myQueue.insert(14)
-    myQueue.insert(7)
+    myQueue.add(12)
+    myQueue.add(1)
+    myQueue.add(14)
+    myQueue.add(7)
     print(myQueue)
     while not myQueue.isEmpty():
-        print(myQueue.delete())
+        print(myQueue.pop())

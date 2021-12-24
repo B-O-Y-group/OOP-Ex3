@@ -6,7 +6,8 @@ from src.GraphAlgoInterface import GraphAlgoInterface
 import json
 from DiGraph import *
 from Node import *
-from PriorityQueue import  *
+from PriorityQueue import *
+
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
@@ -49,37 +50,34 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         except Exception:
             return False
 
-    def dijkstra(self, id1: int, id2: int) -> float:
-
+    def shortest_path(self, id1: int, id2: int) -> (float, list):
+        path_list = []
         # the same vertex
         if id1 == id2:
-            return 0
+            path_list.append(id1)
+            return 0, path_list
 
-        # graph_d = DiGraph()
-        graph_d = copy.deepcopy(self.get_graph())
+        graph_algo = copy.deepcopy(self.get_graph())
 
-
-
-
-
-        # create al list of vizted
-        visited = []
-
-        i = 0
-        while i < graph.v_size():
-            visited.append(0)
-            i = i + 1
-
-        visited[id1] = 1
-
-        queue = PriorityQueue()
+        node_list = graph_algo.get_all_v()  # dic of node
+        curr = node_list.get(id1)  # src
 
 
+        prev = node_list.copy()  #
+
+        prev = dict.fromkeys(prev, None)  # init all the previous to null
+
+        print(node_list)
+        print(prev)
+
+        for i in graph_algo.all_out_edges_of_node(curr):
+             temp_dist = Node.get_weight(curr) + i.get_weight ## idea
+            
+
+    # print(temp_dist)
 
         pass
 
-    def shortest_path(self, id1: int, id2: int) -> (float, list):
-        pass
 
     def plot_graph(self) -> None:
         pass
@@ -88,28 +86,12 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 if __name__ == '__main__':
     g = DiGraph()
     pos = (1, 2, 3)
-
     g.add_node(1, pos)
     g.add_node(2, pos)
-
-    # print(g)
-
     g.add_edge(1, 2, 0)
     g.add_edge(2, 1, 0)
     g.add_node(3, pos)
-    # print(g)
 
     algo = GraphAlgo(g)
 
-    # print(algo.get_graph())
-
-    graph = copy.deepcopy(g)
-
-    visited = []
-    i = 0
-    while i < graph.v_size():
-        visited.append(0)
-        i = i + 1
-
-    visited[0] = 1
-    print(visited)
+    algo.shortest_path(1, 2)
