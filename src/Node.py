@@ -1,8 +1,9 @@
+import math
 class Node:
     def __init__(self, id: int, pos: tuple):
         self.id = id
         self.pos = pos
-        self.weight = 99999999999999999
+        self.weight = math.inf
         self.tag = 0
 
     def get_weight(self):
@@ -30,7 +31,8 @@ if __name__ == '__main__':
     pos = (1, 2, 3)
     node = Node(1, pos)
 
-    print(node.weight)
 
+    print(node.get_weight())
     node.set_weight(0)
-    print(node.weight)
+   #
+   # print(node.weight)

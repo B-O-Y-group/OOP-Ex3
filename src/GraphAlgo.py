@@ -66,38 +66,64 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         graph_algo = copy.deepcopy(self.get_graph())
 
         node_list = graph_algo.get_all_v()  # dic of node
-        curr = node_list.get(id1)  # src
 
+        curr: Node = graph_algo.get_all_v().get(id1)
+        print(curr)
+        curr.set_weight(0)
+        print(curr)
 
         prev = node_list.copy()  #
 
         prev = dict.fromkeys(prev, None)  # init all the previous to null
 
-        print(node_list)
-        print(prev)
+        for v in graph_algo.get_all_v():
 
-        for i in graph_algo.all_out_edges_of_node(curr):
-             temp_dist = Node.get_weight(curr) + i.get_weight ## idea
-            
+            for i in graph_algo.all_out_edges_of_node(curr.id):
+                node_index: Node = graph_algo.get_all_v().get(i)
 
-    # print(temp_dist)
+                print(node_index.weight)
+                w: float = graph_algo.all_out_edges_of_node(id1).get(i)  # weight of the the  d1-->i edge
+                temp_dist = curr.get_weight() + w
+                if temp_dist <= node_index.weight:
+                    node_index.set_weight(temp_dist)
 
-        pass
+                    print(node_index.weight)
+
+            n: Node = graph_algo.get_all_v().get(v)
+            print("---->", n)
+            curr = n
+
+    pass
 
 
-    def plot_graph(self) -> None:
-        pass
+def plot_graph(self) -> None:
+    pass
 
 
 if __name__ == '__main__':
     g = DiGraph()
-    pos = (1, 2, 3)
-    g.add_node(1, pos)
-    g.add_node(2, pos)
-    g.add_edge(1, 2, 0)
-    g.add_edge(2, 1, 0)
-    g.add_node(3, pos)
+    pos = (0, 0, 0)
+    pos1 = (11, 11, 11)
+    pos2 = (12, 12, 12)
+    pos3 = (13, 13, 13)
+
+    node1 = Node(0, pos)
+    node2 = Node(1, pos1)
+    node3 = Node(2, pos2)
+    node4 = Node(3, pos3)
+
+    g.add_node(node1.id, node1.pos)
+    g.add_node(node2.id, node2.pos)
+    g.add_node(node3.id, node3.pos)
+    g.add_node(node4.id, node4.pos)
+
+    g.add_edge(node1.id, node2.id, 1)
+    g.add_edge(node1.id, node3.id, 2)
+    g.add_edge(node1.id, node4.id, 1)
+    g.add_edge(node3.id, node4.id, 1)
 
     algo = GraphAlgo(g)
 
-    algo.shortest_path(1, 2)
+    # print(algo.get_graph())
+
+    algo.shortest_path(node1.id, node2.id)

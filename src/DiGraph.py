@@ -10,6 +10,8 @@ class DiGraph(GraphInterface, ABC):
         self.edges_out = {}
         self.edges_in = {}
 
+
+
     def v_size(self) -> int:
         return self.nodes.__len__()
 
@@ -20,8 +22,11 @@ class DiGraph(GraphInterface, ABC):
         return e_size_list.__len__()
 
     def get_all_v(self) -> dict:
-        dict_nodes = {i: self.nodes.keys() for i in range(0, len(self.nodes))}
-        return dict(dict_nodes)
+        # dict_nodes = {i: self.nodes.keys() for i in range(0, len(self.nodes))}
+        dict_nodes = {i: self.nodes for i in range(0, len(self.nodes))}
+
+        # return dict(dict_nodes)
+        return self.nodes
 
     def all_in_edges_of_node(self, id1: int) -> dict:
         if id1 not in self.edges_in:
@@ -32,7 +37,10 @@ class DiGraph(GraphInterface, ABC):
     def all_out_edges_of_node(self, id1: int) -> dict:
         if id1 not in self.edges_out:
             print(id1, "not existing in this dict")  # check if exist
-        return self.edges_out
+
+        return self.edges_out.get(id1)
+
+    #  return self.edges_out
 
     def get_mc(self) -> int:
         return self.MC
@@ -43,20 +51,27 @@ class DiGraph(GraphInterface, ABC):
             return False
         if id1 not in self.edges_out:
             self.edges_out[id1] = {}  # create new
+
+            self.edges_out[id1].update()
         if id2 not in self.edges_in:
             self.edges_in[id2] = {}
         self.edges_out[id1][id2] = weight
         self.edges_in[id2][id1] = weight
         self.MC += 1
+
+
+        # self.edges_out[id1].update({id2: weight})
+        # self.edges_in[id2].update({id1: weight})
+
         return True
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-
+        newNode = Node(node_id, pos)
         if node_id in self.nodes.keys():
             print(node_id, "is already in the graph")
             return False
         else:
-            self.nodes[node_id] = Node(node_id, pos)
+            self.nodes[node_id] = newNode
             self.MC += 1
             return True
 
@@ -99,14 +114,19 @@ class DiGraph(GraphInterface, ABC):
         return f"nodes: {self.nodes}\nedges: {self.edges_out}"
 
 
+
+
 if __name__ == '__main__':
     g = DiGraph()
     pos = (1, 2, 3)
     g.add_node(2)
     g.add_node(3)
-    g.add_edge(1, 2, 0)
+    g.add_edge(1, 2, 5)
     g.add_edge(1, 3, 0)
+    g.add_edge(2, 3, 10)
     list = g.all_out_edges_of_node(1)
-    print(list)
+    # print(list)
+    #
+    # print(g)
 
-    print(g)
+
