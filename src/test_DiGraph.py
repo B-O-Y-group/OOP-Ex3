@@ -149,7 +149,7 @@ class TestDiGraph(TestCase):
         """# try to remove node_id -4, expected -> same list without - 4 """
         graph_1.remove_node(4)
         expected.pop(4)
-        self.assertEqual(expected, graph_1.get_all_v())
+        self.assertEqual(expected.keys(), graph_1.get_all_v().keys())
         print("Passed All!")
 
     def test_all_in_edges_of_node(self):
