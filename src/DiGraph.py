@@ -9,14 +9,17 @@ class DiGraph(GraphInterface, ABC):
         self.nodes = {}
         self.edges_out = {}
         self.edges_in = {}
+        self.edges_out.values().__len__()
 
     def v_size(self) -> int:
         return self.nodes.__len__()
 
     def e_size(self) -> int:
         e_size_list = []
-        for e in self.edges_out:
-            e_size_list.append(e)
+        print(self.edges_out.values().__len__())
+        for v in self.edges_out:
+            for i in self.edges_out[v]:
+                e_size_list.append(i)
         return e_size_list.__len__()
 
     def get_all_v(self) -> dict:
@@ -45,13 +48,13 @@ class DiGraph(GraphInterface, ABC):
             return False
         if id1 not in self.edges_out:
             self.edges_out[id1] = {}  # create new
+
             self.edges_out[id1].update()
-            self.MC += 1
         if id2 not in self.edges_in:
             self.edges_in[id2] = {}
-            self.edges_out[id1][id2] = weight
-            self.edges_in[id2][id1] = weight
-            self.MC += 1
+        self.edges_out[id1][id2] = weight
+        self.edges_in[id2][id1] = weight
+        self.MC += 1
 
         # self.edges_out[id1].update({id2: weight})
         # self.edges_in[id2].update({id1: weight})
@@ -59,12 +62,12 @@ class DiGraph(GraphInterface, ABC):
         return True
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-        new_node = Node(node_id, pos)
+        newNode = Node(node_id, pos)
         if node_id in self.nodes.keys():
             print(node_id, "is already in the graph")
             return False
         else:
-            self.nodes[node_id] = new_node
+            self.nodes[node_id] = newNode
             self.MC += 1
             return True
 
@@ -77,10 +80,10 @@ class DiGraph(GraphInterface, ABC):
             self.nodes.pop(node_id)
             if node_id in self.edges_out:
                 self.edges_out.pop(node_id)
-            self.MC += 1
             if node_id in self.edges_in:
                 self.edges_in.pop(node_id)
-                self.MC += 1
+
+        self.MC += 1
         return True
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
@@ -96,7 +99,6 @@ class DiGraph(GraphInterface, ABC):
             if node_id2 in self.edges_out.get(node_id1):
                 self.edges_out.get(node_id1).pop(node_id2)
                 self.edges_in.get(node_id2).pop(node_id1)
-                self.MC += 1
                 return True
             return False
 
