@@ -20,8 +20,8 @@ class DiGraph(GraphInterface, ABC):
         return dict(dict_nodes)
 
     def all_in_edges_of_node(self, id1: int) -> dict:
-        # node_in = {self.nodes.get(id1): {self.nodes.get(id2):self.edges(id1,id2)}}
-        return None
+        node_in = {self.nodes.get(id1): {self.nodes.get():self.edges(id1,id2)}}
+        return node_in
 
     def all_out_edges_of_node(self, id1: int) -> dict:
         pass
@@ -46,9 +46,17 @@ class DiGraph(GraphInterface, ABC):
         return True
 
     def remove_node(self, node_id: int) -> bool:
-        if self.nodes.keys() in self.nodes:
+        if self.nodes.keys(node_id) not in self.nodes:
+            return print (self.nodes.keys(node_id), "not in the graph")
+        else:
+            self.nodes.pop(node_id)
+            for i in DiGraph:
+
+
+
             self.MC += 1
-            return self.nodes.pop()
+
+            return
         else:
             print("This node does not exist")
 
