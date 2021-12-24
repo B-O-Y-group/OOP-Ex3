@@ -375,7 +375,7 @@ class TestDiGraph(TestCase):
 
         print("remove_edge -> test 1")
         """# try to remove edge {1-2}. expected -> TRUE """
-        self.assertTrue(graph_1.remove_edge(1, 2))
+        self.assertTrue(graph_1.remove_edge(node_id1=1, node_id2=2))
         print("Passed!")
 
         print("remove_edge -> test 2")
