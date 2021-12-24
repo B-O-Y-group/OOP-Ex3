@@ -55,7 +55,12 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         if id1 == id2:
             return 0
 
-        graph = copy.deepcopy(self.get_graph())
+        # graph_d = DiGraph()
+        graph_d = copy.deepcopy(self.get_graph())
+
+
+
+
 
         # create al list of vizted
         visited = []
