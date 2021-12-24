@@ -46,9 +46,17 @@ class DiGraph(GraphInterface, ABC):
         if id1 is id2:
             print("point to the same value in memory")
             return False
+
+        if id1 not in self.nodes.keys():
+            print(id1, "not in the graph")
+            return False
+
+        if id2 not in self.nodes.keys():
+            print(id2, "not in the graph")
+            return False
+
         if id1 not in self.edges_out:
             self.edges_out[id1] = {}  # create new
-
             self.edges_out[id1].update()
         if id2 not in self.edges_in:
             self.edges_in[id2] = {}
@@ -78,12 +86,13 @@ class DiGraph(GraphInterface, ABC):
             return False
         else:
             self.nodes.pop(node_id)
+            self.MC += 1
             if node_id in self.edges_out:
                 self.edges_out.pop(node_id)
+                self.MC += 1
             if node_id in self.edges_in:
                 self.edges_in.pop(node_id)
-
-        self.MC += 1
+                self.MC += 1
         return True
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
@@ -99,6 +108,7 @@ class DiGraph(GraphInterface, ABC):
             if node_id2 in self.edges_out.get(node_id1):
                 self.edges_out.get(node_id1).pop(node_id2)
                 self.edges_in.get(node_id2).pop(node_id1)
+                self.MC += 1
                 return True
             return False
 
