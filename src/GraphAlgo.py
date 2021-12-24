@@ -14,8 +14,8 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     def __init__(self, graph: GraphInterface):
         self.graph = graph
 
-    def TSP(self, node_lst: List[int]) -> (List[int], float):
-        super().TSP(node_lst)
+    # def TSP(self, node_lst: List[int]) -> (List[int], float):
+    #     super().TSP(node_lst)
 
     def centerPoint(self) -> (int, float):
         super().centerPoint()
