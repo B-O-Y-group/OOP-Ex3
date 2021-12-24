@@ -14,7 +14,10 @@ class DiGraph(GraphInterface, ABC):
         return self.nodes.__len__()
 
     def e_size(self) -> int:
-        return self.edges_out.__len__()
+        e_size_list = []
+        for e in self.edges_out:
+            e_size_list.append(e)
+        return e_size_list.__len__()
 
     def get_all_v(self) -> dict:
         dict_nodes = {i: self.nodes.keys() for i in range(0, len(self.nodes))}
@@ -47,45 +50,53 @@ class DiGraph(GraphInterface, ABC):
         self.MC += 1
         return True
 
+    def add_node(self, node_id: int, pos: tuple = None) -> bool:
 
-def add_node(self, node_id: int, pos: tuple = None) -> bool:
-    if node_id in self.nodes.keys():
-        print(node_id, "is already in the graph")
-        return False
-    else:
-        self.nodes.get[node_id, pos] = {}
+        if node_id in self.nodes.keys():
+            print(node_id, "is already in the graph")
+            return False
+        else:
+            self.nodes[node_id] = Node(node_id, pos)
+            self.MC += 1
+            return True
+
+    def remove_node(self, node_id: int) -> bool:
+
+        if node_id not in self.nodes:
+            print(node_id, "not in the graph")
+            return False
+        else:
+            self.nodes.pop(node_id)
+            if node_id in self.edges_out:
+                self.edges_out.pop(node_id)
+            if node_id in self.edges_in:
+                self.edges_in.pop(node_id)
+
         self.MC += 1
         return True
 
+    def remove_edge(self, node_id1: int, node_id2: int) -> bool:
 
-def remove_node(self, node_id: int) -> bool:
-    if self.nodes.keys(node_id) not in self.nodes:
-        print(self.nodes.keys(node_id), "not in the graph")
+        if node_id1 not in self.nodes:
+            print(node_id1, " is not present in the graph")
+            return False
+        if node_id2 not in self.nodes:
+            print(node_id2, " is not present in the graph")
+            return False
+
+        if node_id1 in self.edges_out:
+            if node_id2 in self.edges_out.get(node_id1):
+                self.edges_out.get(node_id1).pop(node_id2)
+                self.edges_in.get(node_id2).pop(node_id1)
+                return True
+            return False
+
+        print("this edge is missing in graph")
         return False
-    else:
-        self.nodes.pop(node_id)
-        self.edges_out.pop(node_id)
-        self.edges_in.pop(node_id)
-    self.MC += 1
-    return True
 
+    def __str__(self):
 
-def remove_edge(self, node_id1: int, node_id2: int) -> bool:
-    if node_id1 not in self.nodes:
-        print(node_id1, " is not present in the graph")
-        return False
-    elif node_id2 not in self.nodes:
-        print(node_id2, " is not present in the graph")
-        return False
-    elif self.edges_out[node_id1][node_id2]:
-        self.edges_out[node_id1]
-
-        self.edges_in.pop[node_id2][node_id1]
-        return True
-
-
-def __str__(self):
-    return f"nodes: {self.nodes}\nedges: {self.edges_out}"
+        return f"nodes: {self.nodes}\nedges: {self.edges_out}"
 
 
 if __name__ == '__main__':
