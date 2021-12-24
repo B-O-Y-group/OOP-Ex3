@@ -46,6 +46,7 @@ class DiGraph(GraphInterface, ABC):
         if id1 is id2:
             print("point to the same value in memory")
             return False
+
         if id1 not in self.nodes.keys():
             print(id1, "not in the graph")
             return False
