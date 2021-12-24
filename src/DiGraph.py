@@ -22,17 +22,13 @@ class DiGraph(GraphInterface, ABC):
         return e_size_list.__len__()
 
     def get_all_v(self) -> dict:
-        # dict_nodes = {i: self.nodes.keys() for i in range(0, len(self.nodes))}
-        dict_nodes = {i: self.nodes for i in range(0, len(self.nodes))}
-
-        # return dict(dict_nodes)
         return self.nodes
 
     def all_in_edges_of_node(self, id1: int) -> dict:
         if id1 not in self.edges_in:
             print(id1, "not existing in this dict")  # check if exist
 
-        return self.edges_in
+        return self.edges_in.get(id1)
 
     def all_out_edges_of_node(self, id1: int) -> dict:
         if id1 not in self.edges_out:
