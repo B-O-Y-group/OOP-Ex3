@@ -55,6 +55,11 @@ class DiGraph(GraphInterface, ABC):
             print(id2, "not in the graph")
             return False
 
+        if id1 in self.edges_out:
+            if id2 in self.edges_out.get(id1):
+                print("already in graph")
+                return False
+
         if id1 not in self.edges_out:
             self.edges_out[id1] = {}  # create new
             self.edges_out[id1].update()
