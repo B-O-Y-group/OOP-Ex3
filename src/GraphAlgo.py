@@ -1,4 +1,5 @@
 import copy
+import math
 from abc import ABC
 
 from src import GraphInterface
@@ -57,24 +58,46 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         except Exception:
             return False
 
+
+
+
+
+    """ 
+    shortest path :
+        Returns the shortest path from node id1 to node id2 using Dijkstra's Algorithm
+        @param id1: The start node id
+        @param id2: The end node id
+        @return: The distance of the path, a list of the nodes ids that the path goes through
+        
+        the algorithm  check if d[u] + edgeD[u,v] < d[v] -->d[u] = d[v] + edgeD[u,v]
+        by going throw all the node and the edge in graph and update every node distance 
+        we can find the shorted path between every two node 
+         
+        .. 
+        note that if there is not a path between the two  node
+        the return will be infinity and the empty list  .                    
+        
+    """
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         path_list = []
-        # the same vertex
+
         if id1 == id2:
             path_list.append(id1)
             return 0, path_list
 
         graph_algo = copy.deepcopy(self.get_graph())
 
+        if not graph_algo.get_all_v().__contains__(id1):
+            return math.inf, []
+        if not graph_algo.get_all_v().__contains__(id2):
+            return math.inf, []
+
         node_list = graph_algo.get_all_v()  # dic of node
 
         curr: Node = graph_algo.get_all_v().get(id1)
-        #print(curr)
         curr.set_weight(0)
 
-        #print(curr)
-
-        prev = node_list.copy()  #
+        prev = node_list.copy()
 
         prev = dict.fromkeys(prev, None)  # init all the previous to null
 
@@ -90,29 +113,25 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 temp_dist = 0
                 node_dest: Node = graph_algo.get_all_v().get(i)
                 if node_dest.get_tag() != 2:
-                   # print(node_dest.weight)
 
                     w: float = graph_algo.all_out_edges_of_node(curr.id).get(i)  # weight of the the  d1-->i edge
-                    #print("w",graph_algo.all_out_edges_of_node(curr.id).get(i))
-
-
                     temp_dist = curr.get_weight() + float(w)
-                    print("temp ", temp_dist)
+
                     if node_dest.get_tag() == 0:
                         pq.add(node_dest)
                         node_dest.set_tag(1)
 
                     if temp_dist <= node_dest.weight:
                         node_dest.set_weight(temp_dist)
-                       # prev[node_dest.id] = curr.id
-            # find the min from the adjacency
+                        prev[node_dest.id] = curr.id
 
-            curr = pq.pop()
 
-        # prev , path list
+            curr = pq.pop()   #  the minimum of current adjacency is now current
+
+
+
         path_list.append(id2)
         id = prev[id2]
-
 
         while id is not None:
             path_list.append(id)
@@ -120,7 +139,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         path_list.reverse()
         ans: Node = graph_algo.get_all_v().get(id2)
         return ans.weight, path_list
-
 
     def plot_graph(self) -> None:
         pass
@@ -130,17 +148,17 @@ if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
 
-    for i in range(7):
+    for i in range(6):
         graph.add_node(i)
-    graph.add_edge(0, 1, 2)
-    graph.add_edge(0, 2, 4)
-    graph.add_edge(1, 2, 1)
-    graph.add_edge(1, 3, 7)
-    graph.add_edge(2, 4, 3)
-    graph.add_edge(4, 3, 2)
-    graph.add_edge(3, 5, 1)
-    graph.add_edge(4, 5, 5)
+    graph.add_edge(0, 2, 5)
+    graph.add_edge(1, 0, 42)
+    graph.add_edge(1, 3, 5)
+    graph.add_edge(2, 0, 7)
+    graph.add_edge(2, 5, 1)
+    graph.add_edge(3, 1, 11)
+    graph.add_edge(3, 2, 1)
+    graph.add_edge(3, 4, 3)
+    graph.add_edge(4, 5, 1)
+    graph.add_edge(5, 3, 5)
 
-
-
-    print(graph_algo.shortest_path(0,5))
+    print(graph_algo.shortest_path(10, 2))
