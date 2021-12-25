@@ -196,14 +196,11 @@ class TestGraphAlgo(TestCase):
 
         print("shortest_path -> test 5 <T0.json>")
         """# shortest path in T0.json from src:0 des:3. expected -> value(2.8) path {0,1,3}"""
-        # damn u Bark you fucked me with this wrong
-        #self.assertEqual((2.8, [0, 1, 3]), graph_algo.shortest_path(0, 3))
         self.assertEqual((2.8, [0, 1, 3]), graph_t0_algo.shortest_path(0, 3))
         print("Passed!")
 
         print("shortest_path -> test 6 <T0.json>")
         """# shortest path in T0.json from src:3 dest:0. expected -> value(infinity) path{}"""
-      #  self.assertEqual((float('inf'), []), graph_algo.shortest_path(3, 0))
         self.assertEqual((float('inf'), []), graph_t0_algo.shortest_path(3, 0))
         print("Passed All!")
 
