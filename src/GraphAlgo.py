@@ -31,21 +31,30 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
     def load_from_json(self, file_name: str) -> bool:
         try:
-            dic = {}
-            g = DiGraph()
+
             with open(file_name, "r") as f:
+                dic = {}
+                g = DiGraph()
                 dic = json.load(fp=f)
-            for n in dic["Nodes"].values():
-                ##p = n["pos"].values()
-                ## pos = tuple(map(float, pos.split(",")))
-                g.add_node(node_id=n["id"], pos=(n["pos"]))
 
-            for e in dic["Edges"].values():
-                g.add_edge(id1=["src"], id2=["dest"], weight=["w"])
+            for n in dic["Nodes"]:
+                if len(n.keys()) > 2:
+                    p = n["pos"].split(",")
+                    pos = (p[0], p[1], p[2])
+                    g.add_node(node_id=n["id"], pos=pos)
 
-                self.graph = g
+                else:
+                    # random
+                    pos = (0, 0, 0)
+                    g.add_node(node_id=n["id"], pos=pos)
+
+            for e in dic["Edges"]:
+                g.add_edge(id1=e["src"], id2=e["dest"], weight=e["w"])
+
+            self.graph = g
             return True
         except Exception:
+            print(Exception.args)
             return False
 
     def save_to_json(self, file_name: str) -> bool:
@@ -56,11 +65,8 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 json.dump(self, filePointer=f, indent=4, default=lambda o: o.__dict__)
             return True
         except Exception:
+            print(Exception.args)
             return False
-
-
-
-
 
     """ 
     shortest path :
@@ -78,6 +84,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         the return will be infinity and the empty list  .                    
         
     """
+
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         path_list = []
 
@@ -108,6 +115,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 break
             curr.set_tag(2)
 
+            if graph_algo.all_out_edges_of_node(curr.id) is None:
+                return math.inf, path_list
+
             for i in graph_algo.all_out_edges_of_node(curr.id):
                 print(i)
                 temp_dist = 0
@@ -125,10 +135,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                         node_dest.set_weight(temp_dist)
                         prev[node_dest.id] = curr.id
 
-
-            curr = pq.pop()   #  the minimum of current adjacency is now current
-
-
+            curr = pq.pop()  # the minimum of current adjacency is now current
 
         path_list.append(id2)
         id = prev[id2]
@@ -148,17 +155,6 @@ if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
 
-    for i in range(6):
-        graph.add_node(i)
-    graph.add_edge(0, 2, 5)
-    graph.add_edge(1, 0, 42)
-    graph.add_edge(1, 3, 5)
-    graph.add_edge(2, 0, 7)
-    graph.add_edge(2, 5, 1)
-    graph.add_edge(3, 1, 11)
-    graph.add_edge(3, 2, 1)
-    graph.add_edge(3, 4, 3)
-    graph.add_edge(4, 5, 1)
-    graph.add_edge(5, 3, 5)
+    graph_algo.load_from_json("C:\\Users\\97252\\Documents\\GitHub\\OOP-Ex3\\data\\T0.json")
 
-    print(graph_algo.shortest_path(10, 2))
+    print(graph_algo.shortest_path(0, 3))
