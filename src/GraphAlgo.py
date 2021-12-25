@@ -69,10 +69,10 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         node_list = graph_algo.get_all_v()  # dic of node
 
         curr: Node = graph_algo.get_all_v().get(id1)
-        print(curr)
+        #print(curr)
         curr.set_weight(0)
 
-        print(curr)
+        #print(curr)
 
         prev = node_list.copy()  #
 
@@ -90,21 +90,23 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 temp_dist = 0
                 node_dest: Node = graph_algo.get_all_v().get(i)
                 if node_dest.get_tag() != 2:
-                    print(node_dest.weight)
+                   # print(node_dest.weight)
 
-                    w: float = graph_algo.all_out_edges_of_node(id1).get(i)  # weight of the the  d1-->i edge
+                    w: float = graph_algo.all_out_edges_of_node(curr.id).get(i)  # weight of the the  d1-->i edge
+                    #print("w",graph_algo.all_out_edges_of_node(curr.id).get(i))
+
 
                     temp_dist = curr.get_weight() + float(w)
-                    print("temp " , temp_dist)
+                    print("temp ", temp_dist)
                     if node_dest.get_tag() == 0:
                         pq.add(node_dest)
                         node_dest.set_tag(1)
 
                     if temp_dist <= node_dest.weight:
                         node_dest.set_weight(temp_dist)
-                        prev[node_dest.id] = curr.id
+                       # prev[node_dest.id] = curr.id
             # find the min from the adjacency
-            print("djjdd" ,prev)
+
             curr = pq.pop()
 
         # prev , path list
@@ -128,17 +130,17 @@ if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
 
-    for i in range(6):
+    for i in range(7):
         graph.add_node(i)
-    graph.add_edge(0, 2, 5)
-    graph.add_edge(1, 0, 42)
-    graph.add_edge(1, 3, 5)
-    graph.add_edge(2, 0, 7)
-    graph.add_edge(2, 5, 1)
-    graph.add_edge(3, 1, 11)
-    graph.add_edge(3, 2, 1)
-    graph.add_edge(3, 4, 3)
-    graph.add_edge(4, 5, 1)
-    graph.add_edge(5, 3, 5)
+    graph.add_edge(0, 1, 2)
+    graph.add_edge(0, 2, 4)
+    graph.add_edge(1, 2, 1)
+    graph.add_edge(1, 3, 7)
+    graph.add_edge(2, 4, 3)
+    graph.add_edge(4, 3, 2)
+    graph.add_edge(3, 5, 1)
+    graph.add_edge(4, 5, 5)
 
-    graph_algo.shortest_path(4,0)
+
+
+    print(graph_algo.shortest_path(0,5))
