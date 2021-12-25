@@ -7,6 +7,7 @@ import json
 from DiGraph import *
 from Node import *
 from PriorityQueue import *
+import heapq
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
@@ -70,60 +71,74 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         curr: Node = graph_algo.get_all_v().get(id1)
         print(curr)
         curr.set_weight(0)
+
         print(curr)
 
         prev = node_list.copy()  #
 
         prev = dict.fromkeys(prev, None)  # init all the previous to null
 
-        for v in graph_algo.get_all_v():
+        pq = PriorityQueue()
+
+        for _ in graph_algo.get_all_v():
+            if curr.id == id2:
+                break
+            curr.set_tag(2)
 
             for i in graph_algo.all_out_edges_of_node(curr.id):
-                node_index: Node = graph_algo.get_all_v().get(i)
+                print(i)
+                temp_dist = 0
+                node_dest: Node = graph_algo.get_all_v().get(i)
+                if node_dest.get_tag() != 2:
+                    print(node_dest.weight)
 
-                print(node_index.weight)
-                w: float = graph_algo.all_out_edges_of_node(id1).get(i)  # weight of the the  d1-->i edge
-                temp_dist = curr.get_weight() + w
-                if temp_dist <= node_index.weight:
-                    node_index.set_weight(temp_dist)
+                    w: float = graph_algo.all_out_edges_of_node(id1).get(i)  # weight of the the  d1-->i edge
 
-                    print(node_index.weight)
+                    temp_dist = curr.get_weight() + float(w)
+                    print("temp " , temp_dist)
+                    if node_dest.get_tag() == 0:
+                        pq.add(node_dest)
+                        node_dest.set_tag(1)
 
-            n: Node = graph_algo.get_all_v().get(v)
-            print("---->", n)
-            curr = n
+                    if temp_dist <= node_dest.weight:
+                        node_dest.set_weight(temp_dist)
+                        prev[node_dest.id] = curr.id
+            # find the min from the adjacency
+            print("djjdd" ,prev)
+            curr = pq.pop()
 
-    pass
+        # prev , path list
+        path_list.append(id2)
+        id = prev[id2]
 
 
-def plot_graph(self) -> None:
-    pass
+        while id is not None:
+            path_list.append(id)
+            id = prev[id]
+        path_list.reverse()
+        ans: Node = graph_algo.get_all_v().get(id2)
+        return ans.weight, path_list
+
+
+    def plot_graph(self) -> None:
+        pass
 
 
 if __name__ == '__main__':
-    g = DiGraph()
-    pos = (0, 0, 0)
-    pos1 = (11, 11, 11)
-    pos2 = (12, 12, 12)
-    pos3 = (13, 13, 13)
+    graph: GraphInterface = DiGraph()
+    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
 
-    node1 = Node(0, pos)
-    node2 = Node(1, pos1)
-    node3 = Node(2, pos2)
-    node4 = Node(3, pos3)
+    for i in range(6):
+        graph.add_node(i)
+    graph.add_edge(0, 2, 5)
+    graph.add_edge(1, 0, 42)
+    graph.add_edge(1, 3, 5)
+    graph.add_edge(2, 0, 7)
+    graph.add_edge(2, 5, 1)
+    graph.add_edge(3, 1, 11)
+    graph.add_edge(3, 2, 1)
+    graph.add_edge(3, 4, 3)
+    graph.add_edge(4, 5, 1)
+    graph.add_edge(5, 3, 5)
 
-    g.add_node(node1.id, node1.pos)
-    g.add_node(node2.id, node2.pos)
-    g.add_node(node3.id, node3.pos)
-    g.add_node(node4.id, node4.pos)
-
-    g.add_edge(node1.id, node2.id, 1)
-    g.add_edge(node1.id, node3.id, 2)
-    g.add_edge(node1.id, node4.id, 1)
-    g.add_edge(node3.id, node4.id, 1)
-
-    algo = GraphAlgo(g)
-
-    # print(algo.get_graph())
-
-    algo.shortest_path(node1.id, node2.id)
+    graph_algo.shortest_path(4,0)

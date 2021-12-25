@@ -1,5 +1,9 @@
 # A simple implementation of Priority Queue
 # using Queue.
+from Node import *
+import heapq
+
+
 class PriorityQueue(object):
     def __init__(self):
         self.queue = []
@@ -12,7 +16,7 @@ class PriorityQueue(object):
         return len(self.queue) == 0
 
     # for inserting an element in the queue
-    def add(self, data):
+    def add(self, data: Node):
         self.queue.append(data)
 
     # for popping an element based on Priority
@@ -20,6 +24,7 @@ class PriorityQueue(object):
         try:
             min = 0
             for i in range(len(self.queue)):
+
                 if self.queue[i] < self.queue[min]:
                     min = i
             item = self.queue[min]
@@ -28,6 +33,10 @@ class PriorityQueue(object):
         except IndexError:
             print()
             exit()
+
+
+
+
 
 
 if __name__ == '__main__':
