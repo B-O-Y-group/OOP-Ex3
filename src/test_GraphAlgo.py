@@ -60,7 +60,7 @@ class TestGraphAlgo(TestCase):
     def test_load_from_json(self):
         graph: GraphInterface = DiGraph()
         graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-        graph_algo.load_from_json("data/A0.json")
+        graph_algo.load_from_json("../data/A0.json")
 
         print("load_from_json -> test 1")
         """# try to add to the init graph 2 nodes that exist in json file. expected -> FALSE"""
@@ -86,7 +86,7 @@ class TestGraphAlgo(TestCase):
         """# manual INIT new graph that is identical to "T0.json" file"""
         graph_t: GraphInterface = DiGraph()
         graph_t_algo: GraphAlgoInterface = GraphAlgo(graph_t)
-        graph_t_algo.load_from_json("data/T0.json")
+        graph_t_algo.load_from_json("../data/T0.json")
 
         man_graph: GraphInterface = DiGraph()
         for i in range(4):
@@ -136,7 +136,7 @@ class TestGraphAlgo(TestCase):
         new_graph.add_edge(7, 8, 6)
         new_graph.add_edge(7, 9, 7)
         new_graph_algo: GraphAlgoInterface = GraphAlgo(new_graph)
-        new_graph_algo.load_from_json("data/T0.json")
+        new_graph_algo.load_from_json("../data/T0.json")
 
         """# try to remove node_id 5. the graph that described in T0.json does not have node_id 5 like the previous 
         graph. expected -> FALSE """
@@ -190,7 +190,7 @@ class TestGraphAlgo(TestCase):
         graph_t0: GraphInterface = DiGraph()
         graph_t0_algo: GraphAlgoInterface = GraphAlgo(graph_t0)
        # graph_t0_algo.load_from_json("data/T0.json")
-        graph_t0_algo.load_from_json("C:\\Users\\97252\\Documents\\GitHub\\OOP-Ex3\\data\\T0.json")
+        graph_t0_algo.load_from_json("../data/T0.json")
 
 
 
