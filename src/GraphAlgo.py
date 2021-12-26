@@ -207,6 +207,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         return center, final_center
 
 
+
+    # is connected
+
 def plot_graph(self) -> None:
     pass
 
