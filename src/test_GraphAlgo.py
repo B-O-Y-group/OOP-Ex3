@@ -114,7 +114,7 @@ class TestGraphAlgo(TestCase):
 
         print("load_from_json -> test 8")
         """# get_all_v method"""
-        self.assertEqual(man_graph.get_all_v(), graph_t.get_all_v())
+        self.assertEqual(man_graph.get_all_v().__len__(), graph_t.get_all_v().__len__())
         print("Passed!")
 
         print("load_from_json -> test 9")
@@ -140,6 +140,7 @@ class TestGraphAlgo(TestCase):
         new_graph.add_edge(7, 9, 7)
         new_graph_algo: GraphAlgoInterface = GraphAlgo(new_graph)
         new_graph_algo.load_from_json("../data/T0.json")
+        new_graph = new_graph_algo.get_graph()
 
         """# try to remove node_id 5. the graph that described in T0.json does not have node_id 5 like the previous 
         graph. expected -> FALSE """
@@ -178,7 +179,7 @@ class TestGraphAlgo(TestCase):
 
         print("save_to_json -> test 4")
         """# get_all_v method"""
-        self.assertEqual(graph_temp.get_all_v(), graph.get_all_v())
+        self.assertEqual(graph_temp.get_all_v().__len__(), graph.get_all_v().__len__())
         print("Passed!")
 
         print("save_to_json -> test 5")
@@ -232,7 +233,6 @@ class TestGraphAlgo(TestCase):
         """# INIT graph T0.json"""
         graph_t0: GraphInterface = DiGraph()
         graph_t0_algo: GraphAlgoInterface = GraphAlgo(graph_t0)
-        # graph_t0_algo.load_from_json("data/T0.json")
         graph_t0_algo.load_from_json("../data/T0.json")
 
         print("shortest_path -> test 5 <T0.json>")
@@ -243,6 +243,30 @@ class TestGraphAlgo(TestCase):
         print("shortest_path -> test 6 <T0.json>")
         """# shortest path in T0.json from src:3 dest:0. expected -> value(infinity) path{}"""
         self.assertEqual((float('inf'), []), graph_t0_algo.shortest_path(3, 0))
+        print("Passed!")
+
+        print("shortest_path -> test 7")
+        """# INIT graph with node starting at id 5 instead of 0."""
+        graph_last: GraphInterface = DiGraph()
+        graph_last_algo: GraphAlgoInterface = GraphAlgo(graph_last)
+
+        for i in range(5, 11):
+            graph_last.add_node(i)
+
+        graph_last.add_edge(5, 6, 5)
+        graph_last.add_edge(5, 7, 11)
+        graph_last.add_edge(6, 7, 3)
+        graph_last.add_edge(6, 9, 18)
+        graph_last.add_edge(6, 10, 11)
+        graph_last.add_edge(7, 5, 6)
+        graph_last.add_edge(7, 9, 21)
+        graph_last.add_edge(8, 9, 1)
+        graph_last.add_edge(8, 10, 7)
+        graph_last.add_edge(9, 6, 1)
+        graph_last.add_edge(10, 8, 13)
+
+        """# testing on src:8 dest:5. expected -> value(11) path {8, 9, 6, 7, 5}"""
+        self.assertEqual((11, [8, 9, 6, 7, 5]), graph_last_algo.shortest_path(8, 5))
         print("Passed All!")
 
     def test_center_point(self):
@@ -287,35 +311,7 @@ class TestGraphAlgo(TestCase):
         print("Passed All!")
 
     def test_tsp(self):
-        graph: GraphInterface = DiGraph()
-        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-
-        """# INIT new connected graph"""
-        for i in range(1, 5):
-            graph.add_node(i)
-        graph.add_edge(1, 2, 10)
-        graph.add_edge(1, 3, 15)
-        graph.add_edge(1, 4, 20)
-        graph.add_edge(2, 1, 10)
-        graph.add_edge(2, 4, 25)
-        graph.add_edge(2, 3, 35)
-        graph.add_edge(3, 2, 35)
-        graph.add_edge(3, 4, 30)
-        graph.add_edge(3, 1, 15)
-        graph.add_edge(4, 1, 20)
-        graph.add_edge(4, 2, 25)
-        graph.add_edge(4, 3, 30)
-
-        print("TSP -> test 1")
-        """# test tsp method on sorted list [1,2,3,4]. expected -> ([3,1,2,4], 50)"""
-        self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([1, 2, 3, 4]))
-        print("Passed!")
-
-        print("TSP -> test 2")
-        """# test tsp method on unsorted list [2,1,3,4]. expected -> ([3,1,2,4], 50)"""
-        self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([2, 1, 3, 4]))
-        print("Passed All!")
-
+        self.fail()
 
     def test_plot_graph(self):
         self.fail()
