@@ -311,7 +311,34 @@ class TestGraphAlgo(TestCase):
         print("Passed All!")
 
     def test_tsp(self):
-        self.fail()
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        """# INIT new connected graph"""
+        for i in range(1, 5):
+            graph.add_node(i)
+        graph.add_edge(1, 2, 10)
+        graph.add_edge(1, 3, 15)
+        graph.add_edge(1, 4, 20)
+        graph.add_edge(2, 1, 10)
+        graph.add_edge(2, 4, 25)
+        graph.add_edge(2, 3, 35)
+        graph.add_edge(3, 2, 35)
+        graph.add_edge(3, 4, 30)
+        graph.add_edge(3, 1, 15)
+        graph.add_edge(4, 1, 20)
+        graph.add_edge(4, 2, 25)
+        graph.add_edge(4, 3, 30)
+
+        print("TSP -> test 1")
+        """# test tsp method on sorted list [1,2,3,4]. expected -> ([3,1,2,4], 50)"""
+        self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([1, 2, 3, 4]))
+        print("Passed!")
+
+        print("TSP -> test 2")
+        """# test tsp method on unsorted list [2,1,3,4]. expected -> ([3,1,2,4], 50)"""
+        self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([2, 1, 3, 4]))
+        print("Passed All!")
 
     def test_plot_graph(self):
         self.fail()
