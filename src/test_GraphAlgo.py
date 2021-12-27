@@ -155,7 +155,7 @@ class TestGraphAlgo(TestCase):
         """# load A0.json to graph and then save it as "A0.saved.json" ."""
         graph_algo.load_from_json("../data/A0.json")
         graph = graph_algo.get_graph()
-        graph_algo.save_to_json("..data/A0_saved.json")
+        graph_algo.save_to_json("../data/A0_saved.json")
 
         print("save_to_json -> test 1")
         """# load the saved file ("A0_saved.json") . expected -> True"""
