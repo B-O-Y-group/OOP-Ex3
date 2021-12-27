@@ -1,5 +1,6 @@
 import copy
 import math
+import random
 from abc import ABC
 
 from src import GraphInterface
@@ -29,6 +30,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     load_from_json:
             initialize the graph from json file 
     """
+
     def load_from_json(self, file_name: str) -> bool:
         try:
 
@@ -44,8 +46,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                     g.add_node(node_id=n["id"], pos=pos)
 
                 else:
-                    # random
-                    pos = (0, 0, 0)
+                    x = random.randint(0, 100)
+                    y = random.randint(0, 100)
+                    pos = (x, y, 0)
                     g.add_node(node_id=n["id"], pos=pos)
 
             for e in dic["Edges"]:
@@ -153,6 +156,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         and then search for the minimum of all the max weight of each 
         @return: id of Node  with the minimum from the maximum group of weight ,and value (weight)
     """
+
     def centerPoint(self) -> (int, float):
         graph_algo = copy.deepcopy(self.get_graph())
 
@@ -184,8 +188,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         pq = PriorityQueue()
         pq.add(curr)
 
-
-
         while not pq.isEmpty():
             curr = pq.pop()
             curr.set_tag(2)
@@ -215,7 +217,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     def intDist(self, dist: []):
         for j in self.get_graph().get_all_v():
             dist.insert(j, 0)
- ################################################################
+
+
+################################################################
 # is connected
 
 
@@ -224,7 +228,6 @@ def plot_graph(self) -> None:
 
 
 if __name__ == '__main__':
-
     # pos = (0, 0, 0)
     # graph.add_node(0, pos)
     # graph.add_node(1, pos)
@@ -258,6 +261,6 @@ if __name__ == '__main__':
     # print(list)
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    graph_algo.load_from_json("../data/A5.json")
+    graph_algo.load_from_json("../data/T0.json")
 
-    print(graph_algo.centerPoint())
+    print(graph_algo.get_graph())
