@@ -1,3 +1,4 @@
+import os
 from unittest import TestCase
 from DiGraph import *
 from GraphAlgo import *
@@ -146,7 +147,44 @@ class TestGraphAlgo(TestCase):
         print("Passed All!")
 
     def test_save_to_json(self):
-        self.fail()
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        """# load A0.json to graph and then save it as "A0.saved.json" ."""
+        graph_algo.load_from_json("../data/A0.json")
+        graph_algo.save_to_json("..data/A0_saved.json")
+
+        """# load the saved file ("A0_saved.json") . expected -> True"""
+        graph_temp: GraphInterface = DiGraph()
+        graph_algo_temp: GraphAlgoInterface = GraphAlgo(graph_temp)
+        self.assertTrue(graph_algo_temp.load_from_json("../data/A0_saved.json"))
+        os.remove("../data/A0_saved.json")
+
+        """# compare between the two graphs."""
+        print("save_to_json -> test 6")
+        """# e_size method"""
+        self.assertEqual(graph_temp.e_size(), graph.e_size())
+        print("Passed!")
+
+        print("save_to_json -> test 7")
+        """# v_size method"""
+        self.assertEqual(graph_temp.v_size(), graph.v_size())
+        print("Passed!")
+
+        print("save_to_json -> test 8")
+        """# get_all_v method"""
+        self.assertEqual(graph_temp.get_all_v(), graph.get_all_v())
+        print("Passed!")
+
+        print("save_to_json -> test 9")
+        """# all_out_edges_of_node method. node_checked (5)"""
+        self.assertEqual(graph_temp.all_out_edges_of_node(1), graph.all_out_edges_of_node(1))
+        print("Passed!")
+
+        print("save_to_json -> test 10")
+        """# all_in_edges_of_node method. node_checked (9)"""
+        self.assertEqual(graph_temp.all_out_edges_of_node(3), graph.all_out_edges_of_node(3))
+        print("Passed!")
 
     def test_shortest_path(self):
 
@@ -205,7 +243,46 @@ class TestGraphAlgo(TestCase):
         print("Passed All!")
 
     def test_center_point(self):
-        self.fail()
+
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        print("center_point -> test 1 <A0.json>")
+        """# loading A0.json and check its center. expected -> (7, 6.806805834715163)"""
+        graph_algo.load_from_json("../data/A0.json")
+        self.assertEqual((7, 6.806805834715163), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 2 <A1.json>")
+        """# loading A1.json and check its center. expected -> (8, 9.925289024973141)"""
+        graph_algo.load_from_json("../data/A1.json")
+        self.assertEqual((8, 9.925289024973141), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 3 <A2.json>")
+        """# loading A2.json and check its center. expected -> (0, 7.819910602212574)"""
+        graph_algo.load_from_json("../data/A2.json")
+        self.assertEqual((0, 7.819910602212574), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 4 <A3.json>")
+        """# loading A3.json and check its center. expected -> (2, 8.182236568942237)"""
+        graph_algo.load_from_json("../data/A3.json")
+        self.assertEqual((2, 8.182236568942237), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 5 <A4.json>")
+        """# loading A4.json and check its center. expected -> (6, 8.071366078651435)"""
+        graph_algo.load_from_json("../data/A4.json")
+        self.assertEqual((6, 8.071366078651435), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 6 <A5.json>")
+        """# loading A5.json and check its center. expected -> (40, 9.291743173960954)"""
+        graph_algo.load_from_json("../data/A5.json")
+        self.assertEqual((40, 9.291743173960954), graph_algo.centerPoint())
+        print("Passed All!")
+
 
     def test_tsp(self):
         self.fail()
