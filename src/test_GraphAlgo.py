@@ -179,9 +179,7 @@ class TestGraphAlgo(TestCase):
 
         print("save_to_json -> test 4")
         """# get_all_v method"""
-        print(graph_temp.get_all_v())
-        print(graph.get_all_v())
-        self.assertEqual(graph_temp.get_all_v(), graph.get_all_v())
+        self.assertEqual(graph_temp.get_all_v().__len__(), graph.get_all_v().__len__())
         print("Passed!")
 
         print("save_to_json -> test 5")
