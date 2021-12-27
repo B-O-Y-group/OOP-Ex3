@@ -62,6 +62,7 @@ class TestGraphAlgo(TestCase):
         graph: GraphInterface = DiGraph()
         graph_algo: GraphAlgoInterface = GraphAlgo(graph)
         graph_algo.load_from_json("../data/A0.json")
+        graph = graph_algo.get_graph()
 
         print("load_from_json -> test 1")
         """# try to add to the init graph 2 nodes that exist in json file. expected -> FALSE"""
@@ -88,6 +89,7 @@ class TestGraphAlgo(TestCase):
         graph_t: GraphInterface = DiGraph()
         graph_t_algo: GraphAlgoInterface = GraphAlgo(graph_t)
         graph_t_algo.load_from_json("../data/T0.json")
+        graph_t = graph_t_algo.get_graph()
 
         man_graph: GraphInterface = DiGraph()
         for i in range(4):
@@ -152,39 +154,42 @@ class TestGraphAlgo(TestCase):
 
         """# load A0.json to graph and then save it as "A0.saved.json" ."""
         graph_algo.load_from_json("../data/A0.json")
+        graph = graph_algo.get_graph()
         graph_algo.save_to_json("..data/A0_saved.json")
 
+        print("save_to_json -> test 1")
         """# load the saved file ("A0_saved.json") . expected -> True"""
         graph_temp: GraphInterface = DiGraph()
         graph_algo_temp: GraphAlgoInterface = GraphAlgo(graph_temp)
         self.assertTrue(graph_algo_temp.load_from_json("../data/A0_saved.json"))
+        graph_temp = graph_algo_temp.get_graph()
         os.remove("../data/A0_saved.json")
 
         """# compare between the two graphs."""
-        print("save_to_json -> test 6")
+        print("save_to_json -> test 2")
         """# e_size method"""
         self.assertEqual(graph_temp.e_size(), graph.e_size())
         print("Passed!")
 
-        print("save_to_json -> test 7")
+        print("save_to_json -> test 3")
         """# v_size method"""
         self.assertEqual(graph_temp.v_size(), graph.v_size())
         print("Passed!")
 
-        print("save_to_json -> test 8")
+        print("save_to_json -> test 4")
         """# get_all_v method"""
         self.assertEqual(graph_temp.get_all_v(), graph.get_all_v())
         print("Passed!")
 
-        print("save_to_json -> test 9")
+        print("save_to_json -> test 5")
         """# all_out_edges_of_node method. node_checked (5)"""
         self.assertEqual(graph_temp.all_out_edges_of_node(1), graph.all_out_edges_of_node(1))
         print("Passed!")
 
-        print("save_to_json -> test 10")
+        print("save_to_json -> test 6")
         """# all_in_edges_of_node method. node_checked (9)"""
         self.assertEqual(graph_temp.all_out_edges_of_node(3), graph.all_out_edges_of_node(3))
-        print("Passed!")
+        print("Passed All!")
 
     def test_shortest_path(self):
 
