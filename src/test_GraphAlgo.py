@@ -140,6 +140,7 @@ class TestGraphAlgo(TestCase):
         new_graph.add_edge(7, 9, 7)
         new_graph_algo: GraphAlgoInterface = GraphAlgo(new_graph)
         new_graph_algo.load_from_json("../data/T0.json")
+        new_graph = new_graph_algo.get_graph()
 
         """# try to remove node_id 5. the graph that described in T0.json does not have node_id 5 like the previous 
         graph. expected -> FALSE """
