@@ -233,10 +233,8 @@ class TestGraphAlgo(TestCase):
         """# INIT graph T0.json"""
         graph_t0: GraphInterface = DiGraph()
         graph_t0_algo: GraphAlgoInterface = GraphAlgo(graph_t0)
-       # graph_t0_algo.load_from_json("data/T0.json")
+        # graph_t0_algo.load_from_json("data/T0.json")
         graph_t0_algo.load_from_json("../data/T0.json")
-
-
 
         print("shortest_path -> test 5 <T0.json>")
         """# shortest path in T0.json from src:0 des:3. expected -> value(2.8) path {0,1,3}"""
@@ -246,6 +244,30 @@ class TestGraphAlgo(TestCase):
         print("shortest_path -> test 6 <T0.json>")
         """# shortest path in T0.json from src:3 dest:0. expected -> value(infinity) path{}"""
         self.assertEqual((float('inf'), []), graph_t0_algo.shortest_path(3, 0))
+        print("Passed!")
+
+        print("shortest_path -> test 7")
+        """# INIT graph with node starting at id 5 instead of 0."""
+        graph_last: GraphInterface = DiGraph()
+        graph_last_algo: GraphAlgoInterface = GraphAlgo(graph_last)
+
+        for i in range(5, 11):
+            graph_last.add_node(i)
+
+        graph_last.add_edge(5, 6, 5)
+        graph_last.add_edge(5, 7, 11)
+        graph_last.add_edge(6, 7, 3)
+        graph_last.add_edge(6, 9, 18)
+        graph_last.add_edge(6, 10, 11)
+        graph_last.add_edge(7, 5, 6)
+        graph_last.add_edge(7, 9, 21)
+        graph_last.add_edge(8, 9, 1)
+        graph_last.add_edge(8, 10, 7)
+        graph_last.add_edge(9, 6, 1)
+        graph_last.add_edge(10, 8, 13)
+
+        """# testing on src:8 dest:5. expected -> value(11) path {8, 9, 6, 7, 5}"""
+        self.assertEqual((11, [8, 9, 6, 7, 5]), graph_last_algo.shortest_path(8, 5))
         print("Passed All!")
 
     def test_center_point(self):
@@ -288,7 +310,6 @@ class TestGraphAlgo(TestCase):
         graph_algo.load_from_json("../data/A5.json")
         self.assertEqual((40, 9.291743173960954), graph_algo.centerPoint())
         print("Passed All!")
-
 
     def test_tsp(self):
         self.fail()
