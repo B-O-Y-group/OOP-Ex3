@@ -19,15 +19,18 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
     # def TSP(self, node_lst: List[int]) -> (List[int], float):
     #     super().TSP(node_lst)
-
+    """
+    get_graph:
+        This method return the current graph 
+    """
     def get_graph(self) -> GraphInterface:
         return self.graph
+
 
     """
     load_from_json:
             initialize the graph from a json file 
     """
-
     def load_from_json(self, file_name: str) -> bool:
         try:
 
@@ -57,13 +60,31 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             print(Exception.args)
             return False
 
+
+    """
+    save_to_json:
+        This method get a graph and save it in a json file
+    """
     def save_to_json(self, file_name: str) -> bool:
+        node = []
+        edge = []
+        for i in self.graph.get_all_v():
+            curr: Node = self.graph.get_all_v().get(i)
+            pos = str(curr.pos[0]) + "," + str(curr.pos[1]) + "," + str(curr.pos[2])
+            n = {"id": curr.id, "pos": pos}
+            node.append(n)
+            for j in self.graph.all_out_edges_of_node(curr.id):
+                dest: Node = self.graph.get_all_v().get(j)
+                e = {"src": curr.id, "weight": self.graph.all_out_edges_of_node(curr.id).get(j), "dest": dest.id}
+                edge.append(e)
+
+        dic = {"Nodes": node, "Edges": edge}
+
         try:
             with open(file_name, "w") as f:
                 ## indenter is number rof space
-                ## default= lambda  o :o.__dict__ taking the self and change him to dictionaries
-                json.dump(self, filePointer=f, indent=4, default=lambda o: o.__dict__)
-            return True
+                json.dump(dic, fp=f, indent=4, default=lambda o: o.__dict__)
+
         except Exception:
             print(Exception.args)
             return False
@@ -225,39 +246,32 @@ def plot_graph(self) -> None:
 
 
 if __name__ == '__main__':
-    # pos = (0, 0, 0)
-    # graph.add_node(0, pos)
-    # graph.add_node(1, pos)
-    # graph.add_node(2, pos)
-    # graph.add_node(3, pos)
-    # graph.add_node(4, pos)
-    # graph.add_node(5, pos)
-    #
-    # graph.add_edge(0, 1, 3)
-    # graph.add_edge(0, 5, 2)
-    #
-    # graph.add_edge(1, 2, 3)
-    #
-    # graph.add_edge(2, 3, 1)
-    # graph.add_edge(2, 4, 4)
-    #
-    # graph.add_edge(3, 0, 1)
-    #
-    # graph.add_edge(4, 3, 3)
-    # graph.add_edge(4, 1, 6)
-    #
-    # graph.add_edge(5, 4, 4)
-    #
-
-    #
-    # print(graph_algo.centerPoint())
-
-    # list = []
-    # for i in graph.get_all_v():
-    #     list.insert(i,0)
-    # print(list)
     graph: GraphInterface = DiGraph()
-    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    graph_algo.load_from_json("../data/T0.json")
+    pos = (0, 0, 0)
+    graph.add_node(0, pos)
+    graph.add_node(1, pos)
+    graph.add_node(2, pos)
+    graph.add_node(3, pos)
+    graph.add_node(4, pos)
+    graph.add_node(5, pos)
 
-    print(graph_algo.get_graph())
+    graph.add_edge(0, 1, 3)
+    graph.add_edge(0, 5, 2)
+
+    graph.add_edge(1, 2, 3)
+
+    graph.add_edge(2, 3, 1)
+    graph.add_edge(2, 4, 4)
+
+    graph.add_edge(3, 0, 1)
+
+    graph.add_edge(4, 3, 3)
+    graph.add_edge(4, 1, 6)
+
+    graph.add_edge(5, 4, 4)
+
+    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    graph_algo.load_from_json("../data/A1.json")
+    graph_algo.save_to_json("../data/T1.json")
+
+# print(graph.)
