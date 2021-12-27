@@ -114,7 +114,7 @@ class TestGraphAlgo(TestCase):
 
         print("load_from_json -> test 8")
         """# get_all_v method"""
-        self.assertEqual(man_graph.get_all_v(), graph_t.get_all_v())
+        self.assertEqual(man_graph.get_all_v().__len__(), graph_t.get_all_v().__len__())
         print("Passed!")
 
         print("load_from_json -> test 9")
