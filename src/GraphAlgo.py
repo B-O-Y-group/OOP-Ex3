@@ -143,6 +143,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         ans: Node = graph_algo.get_all_v().get(id2)
         return ans.weight, path_list
 
+    ################################################################
     def allPath(self, id: int, dist: []) -> list:
 
         graph_algo = copy.deepcopy(self.get_graph())
@@ -150,13 +151,17 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         curr.set_weight(0)
 
         pq = PriorityQueue()
+        counter = 0
+        pq.add(curr)
 
-        for _ in graph_algo.get_all_v():
-            print(dist)
+        #for _ in graph_algo.get_all_v():
+
+        while not pq.isEmpty():
+            curr = pq.pop()
             curr.set_tag(2)
 
-            if graph_algo.all_out_edges_of_node(curr.id) is None:
-                break
+            # if graph_algo.all_out_edges_of_node(curr.id) is None:
+            #     continue
 
             for i in graph_algo.all_out_edges_of_node(curr.id):
 
@@ -175,7 +180,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                         node_dest.set_weight(temp_dist)
                         dist[node_dest.id] = node_dest.weight
 
-            curr = pq.pop()  # the minimum of current adjacency is now current
+
 
         return dist
 
@@ -184,7 +189,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             dist.insert(j, 0)
 
     def centerPoint(self) -> (int, float):
-
         graph_algo = copy.deepcopy(self.get_graph())
 
         final_center = math.inf
@@ -193,8 +197,8 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         for i in graph_algo.get_all_v():
             curr: Node = graph_algo.get_all_v().get(i)
             dist = []
+
             self.intDist(dist)
-            print(dist)
 
             self.allPath(curr.id, dist)
             print(dist)
@@ -207,48 +211,48 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         return center, final_center
 
 
+# is connected
 
-    # is connected
 
 def plot_graph(self) -> None:
     pass
 
 
 if __name__ == '__main__':
-    graph: GraphInterface = DiGraph()
-    pos = (0, 0, 0)
-    graph.add_node(0, pos)
-    graph.add_node(1, pos)
-    graph.add_node(2, pos)
-    graph.add_node(3, pos)
-    graph.add_node(4, pos)
-    graph.add_node(5, pos)
 
-    graph.add_edge(0, 1, 3)
-    graph.add_edge(0, 5, 2)
+    # pos = (0, 0, 0)
+    # graph.add_node(0, pos)
+    # graph.add_node(1, pos)
+    # graph.add_node(2, pos)
+    # graph.add_node(3, pos)
+    # graph.add_node(4, pos)
+    # graph.add_node(5, pos)
+    #
+    # graph.add_edge(0, 1, 3)
+    # graph.add_edge(0, 5, 2)
+    #
+    # graph.add_edge(1, 2, 3)
+    #
+    # graph.add_edge(2, 3, 1)
+    # graph.add_edge(2, 4, 4)
+    #
+    # graph.add_edge(3, 0, 1)
+    #
+    # graph.add_edge(4, 3, 3)
+    # graph.add_edge(4, 1, 6)
+    #
+    # graph.add_edge(5, 4, 4)
+    #
 
-    graph.add_edge(1, 2, 3)
-
-    graph.add_edge(2, 3, 1)
-    graph.add_edge(2, 4, 4)
-
-    graph.add_edge(3, 0, 1)
-
-    graph.add_edge(4, 3, 3)
-    graph.add_edge(4, 1, 6)
-
-    graph.add_edge(5, 4, 4)
-
-    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-
-    print(graph_algo.centerPoint())
+    #
+    # print(graph_algo.centerPoint())
 
     # list = []
     # for i in graph.get_all_v():
     #     list.insert(i,0)
     # print(list)
+    graph: GraphInterface = DiGraph()
+    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    graph_algo.load_from_json("../data/A5.json")
 
-#
-# graph_algo.load_from_json("../data/A0.json")
-#
-# print(graph_algo.get_graph())
+    print(graph_algo.centerPoint())
