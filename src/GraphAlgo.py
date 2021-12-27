@@ -75,7 +75,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             node.append(n)
             for j in self.graph.all_out_edges_of_node(curr.id):
                 dest: Node = self.graph.get_all_v().get(j)
-                e = {"src": curr.id, "weight": self.graph.all_out_edges_of_node(curr.id).get(j), "dest": dest.id}
+                e = {"src": curr.id, "w": self.graph.all_out_edges_of_node(curr.id).get(j), "dest": dest.id}
                 edge.append(e)
 
         dic = {"Nodes": node, "Edges": edge}
