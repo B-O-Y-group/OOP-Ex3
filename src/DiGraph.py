@@ -11,6 +11,7 @@ class DiGraph(GraphInterface, ABC):
         self.edges_in = {}
         self.edges_out.values().__len__()
 
+
     def v_size(self) -> int:
         return self.nodes.__len__()
 
@@ -65,7 +66,11 @@ class DiGraph(GraphInterface, ABC):
         self.edges_out[id1][id2] = weight
         self.edges_in[id2][id1] = weight
         self.MC += 1
+
         return True
+
+
+
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         new_node = Node(node_id, pos)
