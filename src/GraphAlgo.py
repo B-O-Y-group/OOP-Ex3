@@ -40,16 +40,17 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 dic = json.load(fp=f)
 
             for n in dic["Nodes"]:
-                if len(n.keys()) > 2:
+                if len(n.keys()) == 1:
+                    # x = None
+                    # y = None
+                    # pos = (x, y, 0)
+                    g.add_node(node_id=n["id"], pos=None)
+
+                else:
                     p = n["pos"].split(",")
                     pos = (p[0], p[1], p[2])
                     g.add_node(node_id=n["id"], pos=pos)
 
-                else:
-                    x = random.randint(0, 100)
-                    y = random.randint(0, 100)
-                    pos = (x, y, 0)
-                    g.add_node(node_id=n["id"], pos=pos)
 
             for e in dic["Edges"]:
                 g.add_edge(id1=e["src"], id2=e["dest"], weight=e["w"])
@@ -78,13 +79,13 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 e = {"src": curr.id, "w": self.graph.all_out_edges_of_node(curr.id).get(j), "dest": dest.id}
                 edge.append(e)
 
-        dic = {"Nodes": node, "Edges": edge}
+        dic = {"Edges": edge,"Nodes": node}
 
         try:
             with open(file_name, "w") as f:
                 ## indenter is number rof space
                 json.dump(dic, fp=f, indent=4, default=lambda o: o.__dict__)
-
+                return True
         except Exception:
             print(Exception.args)
             return False
