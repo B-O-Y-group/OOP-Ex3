@@ -23,12 +23,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     def get_graph(self) -> GraphInterface:
         return self.graph
 
-    # add_edge(self, id1: int, id2: int, weight: float)
-    ##    add_node(self, node_id: int, pos: tuple = None)
-
     """
     load_from_json:
-            initialize the graph from json file 
+            initialize the graph from a json file 
     """
 
     def load_from_json(self, file_name: str) -> bool:
