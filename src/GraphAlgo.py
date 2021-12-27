@@ -1,5 +1,6 @@
 import copy
 import math
+import random
 from abc import ABC
 
 from src import GraphInterface
@@ -19,15 +20,13 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     # def TSP(self, node_lst: List[int]) -> (List[int], float):
     #     super().TSP(node_lst)
 
-    def centerPoint(self) -> (int, float):
-        super().centerPoint()
-
     def get_graph(self) -> GraphInterface:
-        # super().get_graph()
         return self.graph
 
-    # add_edge(self, id1: int, id2: int, weight: float)
-    ##    add_node(self, node_id: int, pos: tuple = None)
+    """
+    load_from_json:
+            initialize the graph from a json file 
+    """
 
     def load_from_json(self, file_name: str) -> bool:
         try:
@@ -44,8 +43,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                     g.add_node(node_id=n["id"], pos=pos)
 
                 else:
-                    # random
-                    pos = (0, 0, 0)
+                    x = random.randint(0, 100)
+                    y = random.randint(0, 100)
+                    pos = (x, y, 0)
                     g.add_node(node_id=n["id"], pos=pos)
 
             for e in dic["Edges"]:
@@ -147,14 +147,117 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         ans: Node = graph_algo.get_all_v().get(id2)
         return ans.weight, path_list
 
-    def plot_graph(self) -> None:
-        pass
+    """ 
+    centerPoint :
+        this algorithm using dijkstra and search for each node the maximum weight from him to all the other  
+        and then search for the minimum of all the max weight of each 
+        @return: id of Node  with the minimum from the maximum group of weight ,and value (weight)
+    """
+
+    def centerPoint(self) -> (int, float):
+        graph_algo = copy.deepcopy(self.get_graph())
+
+        final_center = math.inf
+        center = None
+
+        for i in graph_algo.get_all_v():
+            curr: Node = graph_algo.get_all_v().get(i)
+            dist = []
+
+            self.intDist(dist)
+
+            self.allPath(curr.id, dist)
+            print(dist)
+            max_of_the_list = max(dist)
+
+            if max_of_the_list < final_center:
+                center = curr.id
+                final_center = max_of_the_list
+
+        return center, final_center
+
+    def allPath(self, id: int, dist: []) -> list:
+
+        graph_algo = copy.deepcopy(self.get_graph())
+        curr: Node = graph_algo.get_all_v().get(id)
+        curr.set_weight(0)
+
+        pq = PriorityQueue()
+        pq.add(curr)
+
+        while not pq.isEmpty():
+            curr = pq.pop()
+            curr.set_tag(2)
+
+            # if graph_algo.all_out_edges_of_node(curr.id) is None:
+            #     continue
+
+            for i in graph_algo.all_out_edges_of_node(curr.id):
+
+                temp_dist = 0
+                node_dest: Node = graph_algo.get_all_v().get(i)
+                if node_dest.get_tag() != 2:
+
+                    w: float = graph_algo.all_out_edges_of_node(curr.id).get(i)  # weight of the the  d1-->i edge
+                    temp_dist = curr.get_weight() + float(w)
+
+                    if node_dest.get_tag() == 0:
+                        pq.add(node_dest)
+                        node_dest.set_tag(1)
+
+                    if temp_dist <= node_dest.weight:
+                        node_dest.set_weight(temp_dist)
+                        dist[node_dest.id] = node_dest.weight
+
+        return dist
+
+    def intDist(self, dist: []):
+        for j in self.get_graph().get_all_v():
+            dist.insert(j, 0)
+
+
+################################################################
+# is connected
+
+
+def plot_graph(self) -> None:
+    pass
 
 
 if __name__ == '__main__':
+    # pos = (0, 0, 0)
+    # graph.add_node(0, pos)
+    # graph.add_node(1, pos)
+    # graph.add_node(2, pos)
+    # graph.add_node(3, pos)
+    # graph.add_node(4, pos)
+    # graph.add_node(5, pos)
+    #
+    # graph.add_edge(0, 1, 3)
+    # graph.add_edge(0, 5, 2)
+    #
+    # graph.add_edge(1, 2, 3)
+    #
+    # graph.add_edge(2, 3, 1)
+    # graph.add_edge(2, 4, 4)
+    #
+    # graph.add_edge(3, 0, 1)
+    #
+    # graph.add_edge(4, 3, 3)
+    # graph.add_edge(4, 1, 6)
+    #
+    # graph.add_edge(5, 4, 4)
+    #
+
+    #
+    # print(graph_algo.centerPoint())
+
+    # list = []
+    # for i in graph.get_all_v():
+    #     list.insert(i,0)
+    # print(list)
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    graph_algo.load_from_json("../data/T0.json")
 
-    graph_algo.load_from_json("C:\\Users\\97252\\Documents\\GitHub\\OOP-Ex3\\data\\T0.json")
-
-    print(graph_algo.shortest_path(0, 3))
+    print(graph_algo.get_graph())
