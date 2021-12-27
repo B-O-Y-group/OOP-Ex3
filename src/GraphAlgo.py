@@ -143,7 +143,34 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         ans: Node = graph_algo.get_all_v().get(id2)
         return ans.weight, path_list
 
-    ################################################################
+    """ 
+    centerPoint :
+        this algorithm using dijkstra and search for each node the maximum weight from him to all the other  
+        and then search for the minimum of all the max weight of each 
+        @return: id of Node  with the minimum from the maximum group of weight ,and value (weight)
+    """
+    def centerPoint(self) -> (int, float):
+        graph_algo = copy.deepcopy(self.get_graph())
+
+        final_center = math.inf
+        center = None
+
+        for i in graph_algo.get_all_v():
+            curr: Node = graph_algo.get_all_v().get(i)
+            dist = []
+
+            self.intDist(dist)
+
+            self.allPath(curr.id, dist)
+            print(dist)
+            max_of_the_list = max(dist)
+
+            if max_of_the_list < final_center:
+                center = curr.id
+                final_center = max_of_the_list
+
+        return center, final_center
+
     def allPath(self, id: int, dist: []) -> list:
 
         graph_algo = copy.deepcopy(self.get_graph())
@@ -151,10 +178,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         curr.set_weight(0)
 
         pq = PriorityQueue()
-        counter = 0
         pq.add(curr)
 
-        #for _ in graph_algo.get_all_v():
+
 
         while not pq.isEmpty():
             curr = pq.pop()
@@ -180,37 +206,12 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                         node_dest.set_weight(temp_dist)
                         dist[node_dest.id] = node_dest.weight
 
-
-
         return dist
 
     def intDist(self, dist: []):
         for j in self.get_graph().get_all_v():
             dist.insert(j, 0)
-
-    def centerPoint(self) -> (int, float):
-        graph_algo = copy.deepcopy(self.get_graph())
-
-        final_center = math.inf
-        center = None
-
-        for i in graph_algo.get_all_v():
-            curr: Node = graph_algo.get_all_v().get(i)
-            dist = []
-
-            self.intDist(dist)
-
-            self.allPath(curr.id, dist)
-            print(dist)
-            max_of_the_list = max(dist)
-
-            if max_of_the_list < final_center:
-                center = curr.id
-                final_center = max_of_the_list
-
-        return center, final_center
-
-
+ ################################################################
 # is connected
 
 
