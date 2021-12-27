@@ -233,7 +233,6 @@ class TestGraphAlgo(TestCase):
         """# INIT graph T0.json"""
         graph_t0: GraphInterface = DiGraph()
         graph_t0_algo: GraphAlgoInterface = GraphAlgo(graph_t0)
-       # graph_t0_algo.load_from_json("data/T0.json")
         graph_t0_algo.load_from_json("../data/T0.json")
 
 
