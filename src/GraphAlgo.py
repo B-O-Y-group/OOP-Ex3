@@ -1,7 +1,9 @@
 import copy
 import math
 import random
+import sys
 from abc import ABC
+from typing import List
 
 from src import GraphInterface
 from src.GraphAlgoInterface import GraphAlgoInterface
@@ -112,7 +114,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         
     """
 
-    def shortest_path(self, id1: int, id2: int) -> (float, list):
+    def shortest_path(self, id1: int, id2: int) -> (float, List):
         path_list = []
 
         if id1 == id2:
@@ -146,7 +148,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 return math.inf, path_list
 
             for i in graph_algo.all_out_edges_of_node(curr.id):
-                print(i)
+
                 temp_dist = 0
                 node_dest: Node = graph_algo.get_all_v().get(i)
                 if node_dest.get_tag() != 2:
@@ -194,7 +196,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             self.intDist(dist)
 
             self.all_path(curr.id, dist)
-            print(dist)
+
             max_of_the_list = max(dist)
 
             if max_of_the_list < final_center:
@@ -203,7 +205,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
         return center, final_center
 
-    def all_path(self, id: int, dist: []) -> list:
+    def all_path(self, id: int, dist: []) -> List:
 
         graph_algo = copy.deepcopy(self.get_graph())
         curr: Node = graph_algo.get_all_v().get(id)
@@ -216,8 +218,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             curr = pq.pop()
             curr.set_tag(2)
 
-            # if graph_algo.all_out_edges_of_node(curr.id) is None:
-            #     continue
 
             for i in graph_algo.all_out_edges_of_node(curr.id):
 
@@ -242,46 +242,98 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         for j in self.get_graph().get_all_v():
             dist.insert(j, 0)
 
-    ################################################################
+    """
+    TSP:
+        This method solve the problem "Traveling Salesman Problem"
+        by trying all the Combinations of the faster routes for every node
+        in the list we get we can find the best of them .
+        
+        @param list: list of node.id 
+        @return: List of the the best route , weight of the route list 
+    """
 
-    def TSP(self, node_lst: list[int]) -> (list[int], float):
+    def TSP(self, node_lst: List[int]) -> (List[int], float):
+        graph_algo = copy.deepcopy(self.get_graph())
+        temp = math.inf
+
+        sort_node_list = node_lst
+        sort_node_list.sort()
         path = []
 
-        return
-        pass
+        for i in sort_node_list:
 
-    def plot_graph(self) -> None:
-        pass
+            path_int = []
+
+            node: Node = graph_algo.get_all_v().get(i)
+            path_int.append(node)
+
+            # list of all the node expet the current
+            miss = sort_node_list.copy()
+            miss.remove(node.id)
+
+            # find the path
+            list_t = self.tsp_rec(path_int, miss, 0, math.inf)
+
+            # Calculate the weight of the route
+            curr_weight = self.Calculate_weight(list_t)
+
+            if curr_weight < temp:
+                path = list_t
+                temp = curr_weight
+
+        ans = []
+
+        for i in range(len(path)):
+            curr_node: Node = path[i]
+            ans.append(curr_node.id)
+
+        return ans, temp
+
+    def tsp_rec(self, path, miss, val, final_v):
+        if len(miss) == 0:
+            return path
+        i = 0
+        while len(miss) > i:
+
+            t_val = val + self.shortest_path(path[len(path) - 1].id, miss[i])[0]
+            t_miss = miss
+            t_path = self.update(path, self.shortest_path(path[len(path) - 1].id, miss[i])[1],
+                                 t_miss)
+
+            temp_list = self.tsp_rec(t_path, t_miss, t_val, final_v)
+
+            if t_val < final_v:
+                path = temp_list
+                final_v = t_val
+
+            i = i + 1
+
+        return path
+
+    def update(self, path, shortest, miss):
+        ans = path
+        graph_algo = copy.deepcopy(self.get_graph())
+        for i in range(len(shortest)):
+            if i > 0:
+                node: Node = graph_algo.get_all_v().get(shortest[i])
+                ans.append(node)
 
 
-if __name__ == '__main__':
-    graph: GraphInterface = DiGraph()
-    # pos = (0, 0, 0)
-    # graph.add_node(0, pos)
-    # graph.add_node(1, pos)
-    # graph.add_node(2, pos)
-    # graph.add_node(3, pos)
-    # graph.add_node(4, pos)
-    # graph.add_node(5, pos)
-    #
-    # graph.add_edge(0, 1, 3)
-    # graph.add_edge(0, 5, 2)
-    #
-    # graph.add_edge(1, 2, 3)
-    #
-    # graph.add_edge(2, 3, 1)
-    # graph.add_edge(2, 4, 4)
-    #
-    # graph.add_edge(3, 0, 1)
-    #
-    # graph.add_edge(4, 3, 3)
-    # graph.add_edge(4, 1, 6)
-    #
-    # graph.add_edge(5, 4, 4)
+            j = 0
+            while len(miss) > j:
 
-    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    graph_algo.load_from_json("../data/A1.json")
-    # graph_algo.save_to_json("../data/T1.json")
-    #
+                if shortest[i] == miss[j]:
+                    miss.remove(miss[j])
+                j = j + 1
+        return ans
 
-    print(graph_algo.get_graph())
+    def Calculate_weight(self, path: list[Node]) -> float:
+        ans = 0.0
+        for i in range(len(path)):
+            if i < len(path) - 1:
+                ans += self.shortest_path(path[i].id, path[i + 1].id)[0]
+        return ans
+
+
+def plot_graph(self) -> None:
+    pass

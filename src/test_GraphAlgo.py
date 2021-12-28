@@ -375,5 +375,5 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([2, 1, 3, 4]))
         print("Passed All!")
 
-    def test_plot_graph(self):
-        self.fail()
+    # def test_plot_graph(self):
+    #     self.fail()
