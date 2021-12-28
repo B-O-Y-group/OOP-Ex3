@@ -5,6 +5,9 @@ from DiGraph import *
 from pygame.constants import RESIZABLE
 import math
 
+pygame.font.init()
+FONT = pygame.font.SysFont("Ariel", 22)
+
 screen = pygame.display.set_mode((700, 500), flags=RESIZABLE)  # check!
 
 """------------------> START SCALE METHODS"""
@@ -36,7 +39,31 @@ def my_scale(data, x=False, y=False):
         return scale(data, 50, screen.get_height() - 50, min_y, max_y)
 
 
-"""------------------> END SCALE METHODS"""
+"""------------------> END SCALE METHODS <------------------"""
+
+"""------------------> START Draw Methods <-----------------"""
+
+
+def arrow(start, end, d, h, color):
+    dx = float(end[0] - start[0])
+    dy = float(end[1] - start[1])
+    D = float(math.sqrt(dx * dx + dy * dy))
+    xm = float(D - d)
+    xn = float(xm)
+    ym = float(h)
+    yn = -h
+    sin = dy / D
+    cos = dx / D
+    x = xm * cos - ym * sin + start[0]
+    ym = xm * sin + ym * cos + start[1]
+    xm = x
+    x = xn * cos - yn * sin + start[0]
+    yn = xn * sin + yn * cos + start[1]
+    xn = x
+    points = [(end[0], end[1]), (int(xm), int(ym)), (int(xn), int(yn))]
+
+    pygame.draw.line(screen, color, start, end, width=4)
+    pygame.draw.polygon(screen, color, points)
 
 
 def draw(graph: GraphInterface):
@@ -44,14 +71,20 @@ def draw(graph: GraphInterface):
         node: Node = src
         x = my_scale(data=node.pos[0], x=True)
         y = my_scale(data=node.pos[1], y=True)
+        src_text = FONT.render(str(node.id), True, (0, 0, 0))
         node_center = (int(node.pos[0]), int(node.pos[1]))
         # print(node)
-        pygame.draw.circle(screen, color=(253, 225, 70), center=(x, y), radius=10)
+        node_radius = 10
+        pygame.draw.circle(screen, color=(253, 225, 70), center=(x, y), radius=node_radius)
+        screen.blit(src_text, (x-(node_radius/2), y-(node_radius/2)))
         for dest in graph.all_out_edges_of_node(node.id):
             dest: Node = graph.get_all_v()[dest]
             dest_x = my_scale(data=dest.pos[0], x=True)
             dest_y = my_scale(data=dest.pos[1], y=True)
-            pygame.draw.line(screen, (255, 255, 255), start_pos=(x, y), end_pos=(dest_x, dest_y), width=5)
+            arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
+
+
+"""------------------> END Draw Methods <-----------------"""
 
 
 def display(algo: GraphAlgoInterface):
@@ -65,6 +98,11 @@ def display(algo: GraphAlgoInterface):
         screen.fill((216, 158, 154))
         draw(algo.get_graph())
         pygame.display.update()
+
+
+class Button:
+    def __init__(self, rect: pygame.Rect, color, text ,func=None):
+        
 
 
 if __name__ == '__main__':
