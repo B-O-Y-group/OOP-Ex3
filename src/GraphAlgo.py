@@ -14,11 +14,12 @@ import heapq
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
+    def __int__(self, graph=None):
+        self.graph: GraphInterface = DiGraph()
+
     def __init__(self, graph: GraphInterface):
         self.graph = graph
 
-    # def TSP(self, node_lst: List[int]) -> (List[int], float):
-    #     super().TSP(node_lst)
     """
     get_graph:
         This method return the current graph 
@@ -49,7 +50,11 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
                 else:
                     p = n["pos"].split(",")
-                    pos = (p[0], p[1], p[2])
+                    x = p[0]
+                    y = p[1]
+                    z = p[2]
+
+                    pos = (float(x), float(y), float(z))
                     g.add_node(node_id=n["id"], pos=pos)
 
             for e in dic["Edges"]:
@@ -237,42 +242,46 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         for j in self.get_graph().get_all_v():
             dist.insert(j, 0)
 
+    ################################################################
 
-################################################################
-# is connected
+    def TSP(self, node_lst: list[int]) -> (list[int], float):
+        path = []
 
+        return
+        pass
 
-def plot_graph(self) -> None:
-    pass
+    def plot_graph(self) -> None:
+        pass
 
 
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
-    pos = (0, 0, 0)
-    graph.add_node(0, pos)
-    graph.add_node(1, pos)
-    graph.add_node(2, pos)
-    graph.add_node(3, pos)
-    graph.add_node(4, pos)
-    graph.add_node(5, pos)
-
-    graph.add_edge(0, 1, 3)
-    graph.add_edge(0, 5, 2)
-
-    graph.add_edge(1, 2, 3)
-
-    graph.add_edge(2, 3, 1)
-    graph.add_edge(2, 4, 4)
-
-    graph.add_edge(3, 0, 1)
-
-    graph.add_edge(4, 3, 3)
-    graph.add_edge(4, 1, 6)
-
-    graph.add_edge(5, 4, 4)
+    # pos = (0, 0, 0)
+    # graph.add_node(0, pos)
+    # graph.add_node(1, pos)
+    # graph.add_node(2, pos)
+    # graph.add_node(3, pos)
+    # graph.add_node(4, pos)
+    # graph.add_node(5, pos)
+    #
+    # graph.add_edge(0, 1, 3)
+    # graph.add_edge(0, 5, 2)
+    #
+    # graph.add_edge(1, 2, 3)
+    #
+    # graph.add_edge(2, 3, 1)
+    # graph.add_edge(2, 4, 4)
+    #
+    # graph.add_edge(3, 0, 1)
+    #
+    # graph.add_edge(4, 3, 3)
+    # graph.add_edge(4, 1, 6)
+    #
+    # graph.add_edge(5, 4, 4)
 
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
     graph_algo.load_from_json("../data/A1.json")
-    graph_algo.save_to_json("../data/T1.json")
+    # graph_algo.save_to_json("../data/T1.json")
+    #
 
-# print(graph.)
+    print(graph_algo.get_graph())
