@@ -2,6 +2,7 @@ import os
 from unittest import TestCase
 from DiGraph import *
 from GraphAlgo import *
+import numbers
 
 
 class TestGraphAlgo(TestCase):
@@ -170,7 +171,15 @@ class TestGraphAlgo(TestCase):
             node_pos = graph_comp_2.get_all_v().get(key).pos
             pos_list_2.append(node_pos)
 
+        print("FIRST", pos_list_1)
+        print("SECOND", pos_list_2)
         self.assertEqual(pos_list_1, pos_list_2)
+        print("Passed!")
+
+        print("load_from_json -> test 13")
+        """# check if the positions are represented as numbers (and not char, string etc..). expected -> TRUE"""
+        for i in range(pos_list_1.__len__()):
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i), numbers.Number))
         print("Passed All!")
 
     def test_save_to_json(self):
