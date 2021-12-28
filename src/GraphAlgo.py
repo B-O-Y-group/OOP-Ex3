@@ -14,23 +14,25 @@ import heapq
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
+    def __int__(self, graph=None):
+        self.graph: GraphInterface = DiGraph()
+
     def __init__(self, graph: GraphInterface):
         self.graph = graph
 
-    # def TSP(self, node_lst: List[int]) -> (List[int], float):
-    #     super().TSP(node_lst)
     """
     get_graph:
         This method return the current graph 
     """
+
     def get_graph(self) -> GraphInterface:
         return self.graph
-
 
     """
     load_from_json:
             initialize the graph from a json file 
     """
+
     def load_from_json(self, file_name: str) -> bool:
         try:
 
@@ -40,15 +42,19 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 dic = json.load(fp=f)
 
             for n in dic["Nodes"]:
-                if len(n.keys()) > 2:
-                    p = n["pos"].split(",")
-                    pos = (p[0], p[1], p[2])
-                    g.add_node(node_id=n["id"], pos=pos)
+                if len(n.keys()) == 1:
+                    # x = None
+                    # y = None
+                    # pos = (x, y, 0)
+                    g.add_node(node_id=n["id"], pos=None)
 
                 else:
-                    x = random.randint(0, 100)
-                    y = random.randint(0, 100)
-                    pos = (x, y, 0)
+                    p = n["pos"].split(",")
+                    x = p[0]
+                    y = p[1]
+                    z = p[2]
+
+                    pos = (float(x), float(y), float(z))
                     g.add_node(node_id=n["id"], pos=pos)
 
             for e in dic["Edges"]:
@@ -60,11 +66,11 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             print(Exception.args)
             return False
 
-
     """
     save_to_json:
         This method get a graph and save it in a json file
     """
+
     def save_to_json(self, file_name: str) -> bool:
         node = []
         edge = []
@@ -75,16 +81,16 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             node.append(n)
             for j in self.graph.all_out_edges_of_node(curr.id):
                 dest: Node = self.graph.get_all_v().get(j)
-                e = {"src": curr.id, "weight": self.graph.all_out_edges_of_node(curr.id).get(j), "dest": dest.id}
+                e = {"src": curr.id, "w": self.graph.all_out_edges_of_node(curr.id).get(j), "dest": dest.id}
                 edge.append(e)
 
-        dic = {"Nodes": node, "Edges": edge}
+        dic = {"Edges": edge, "Nodes": node}
 
         try:
             with open(file_name, "w") as f:
                 ## indenter is number rof space
                 json.dump(dic, fp=f, indent=4, default=lambda o: o.__dict__)
-
+                return True
         except Exception:
             print(Exception.args)
             return False
@@ -170,7 +176,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
     """ 
     centerPoint :
-        this algorithm using dijkstra and search for each node the maximum weight from him to all the other  
+        this algorithm using dijkstra(all_path) and search for each node the maximum weight from him to all the other  
         and then search for the minimum of all the max weight of each 
         @return: id of Node  with the minimum from the maximum group of weight ,and value (weight)
     """
@@ -187,7 +193,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
             self.intDist(dist)
 
-            self.allPath(curr.id, dist)
+            self.all_path(curr.id, dist)
             print(dist)
             max_of_the_list = max(dist)
 
@@ -197,7 +203,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
         return center, final_center
 
-    def allPath(self, id: int, dist: []) -> list:
+    def all_path(self, id: int, dist: []) -> list:
 
         graph_algo = copy.deepcopy(self.get_graph())
         curr: Node = graph_algo.get_all_v().get(id)
@@ -236,42 +242,46 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         for j in self.get_graph().get_all_v():
             dist.insert(j, 0)
 
+    ################################################################
 
-################################################################
-# is connected
+    def TSP(self, node_lst: list[int]) -> (list[int], float):
+        path = []
 
+        return
+        pass
 
-def plot_graph(self) -> None:
-    pass
+    def plot_graph(self) -> None:
+        pass
 
 
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
-    pos = (0, 0, 0)
-    graph.add_node(0, pos)
-    graph.add_node(1, pos)
-    graph.add_node(2, pos)
-    graph.add_node(3, pos)
-    graph.add_node(4, pos)
-    graph.add_node(5, pos)
-
-    graph.add_edge(0, 1, 3)
-    graph.add_edge(0, 5, 2)
-
-    graph.add_edge(1, 2, 3)
-
-    graph.add_edge(2, 3, 1)
-    graph.add_edge(2, 4, 4)
-
-    graph.add_edge(3, 0, 1)
-
-    graph.add_edge(4, 3, 3)
-    graph.add_edge(4, 1, 6)
-
-    graph.add_edge(5, 4, 4)
+    # pos = (0, 0, 0)
+    # graph.add_node(0, pos)
+    # graph.add_node(1, pos)
+    # graph.add_node(2, pos)
+    # graph.add_node(3, pos)
+    # graph.add_node(4, pos)
+    # graph.add_node(5, pos)
+    #
+    # graph.add_edge(0, 1, 3)
+    # graph.add_edge(0, 5, 2)
+    #
+    # graph.add_edge(1, 2, 3)
+    #
+    # graph.add_edge(2, 3, 1)
+    # graph.add_edge(2, 4, 4)
+    #
+    # graph.add_edge(3, 0, 1)
+    #
+    # graph.add_edge(4, 3, 3)
+    # graph.add_edge(4, 1, 6)
+    #
+    # graph.add_edge(5, 4, 4)
 
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
     graph_algo.load_from_json("../data/A1.json")
-    graph_algo.save_to_json("../data/T1.json")
+    # graph_algo.save_to_json("../data/T1.json")
+    #
 
-# print(graph.)
+    print(graph_algo.get_graph())

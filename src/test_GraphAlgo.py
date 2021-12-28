@@ -1,6 +1,8 @@
+import os
 from unittest import TestCase
 from DiGraph import *
 from GraphAlgo import *
+import numbers
 
 
 class TestGraphAlgo(TestCase):
@@ -61,6 +63,7 @@ class TestGraphAlgo(TestCase):
         graph: GraphInterface = DiGraph()
         graph_algo: GraphAlgoInterface = GraphAlgo(graph)
         graph_algo.load_from_json("../data/A0.json")
+        graph = graph_algo.get_graph()
 
         print("load_from_json -> test 1")
         """# try to add to the init graph 2 nodes that exist in json file. expected -> FALSE"""
@@ -87,6 +90,7 @@ class TestGraphAlgo(TestCase):
         graph_t: GraphInterface = DiGraph()
         graph_t_algo: GraphAlgoInterface = GraphAlgo(graph_t)
         graph_t_algo.load_from_json("../data/T0.json")
+        graph_t = graph_t_algo.get_graph()
 
         man_graph: GraphInterface = DiGraph()
         for i in range(4):
@@ -111,7 +115,7 @@ class TestGraphAlgo(TestCase):
 
         print("load_from_json -> test 8")
         """# get_all_v method"""
-        self.assertEqual(man_graph.get_all_v(), graph_t.get_all_v())
+        self.assertEqual(man_graph.get_all_v().__len__(), graph_t.get_all_v().__len__())
         print("Passed!")
 
         print("load_from_json -> test 9")
@@ -137,16 +141,91 @@ class TestGraphAlgo(TestCase):
         new_graph.add_edge(7, 9, 7)
         new_graph_algo: GraphAlgoInterface = GraphAlgo(new_graph)
         new_graph_algo.load_from_json("../data/T0.json")
+        new_graph = new_graph_algo.get_graph()
 
         """# try to remove node_id 5. the graph that described in T0.json does not have node_id 5 like the previous 
         graph. expected -> FALSE """
 
         print("load_from_json -> test 11")
         self.assertFalse(new_graph.remove_node(5))
+        print("Passed!")
+
+        print("load_from_json -> test 12")
+        """# INIT graph to compare nodes positions."""
+        graph_comp_1: GraphInterface = DiGraph()
+        graph_algo_comp_1: GraphAlgoInterface = GraphAlgo(graph_comp_1)
+        graph_algo_comp_1.load_from_json("../data/A0.json")
+        graph_comp_1 = graph_algo_comp_1.get_graph()
+        pos_list_1 = []
+        for key in graph_comp_1.get_all_v():
+            node_pos = graph_comp_1.get_all_v().get(key).pos
+            pos_list_1.append(node_pos)
+
+        """# INIT new graph like "graph_comp_1" and compare nodes positions. expected -> TRUE"""
+        graph_comp_2: GraphInterface = DiGraph()
+        graph_algo_comp_2: GraphAlgoInterface = GraphAlgo(graph_comp_2)
+        graph_algo_comp_2.load_from_json("../data/A0.json")
+        graph_comp_2 = graph_algo_comp_2.get_graph()
+        pos_list_2 = []
+        for key in graph_comp_2.get_all_v():
+            node_pos = graph_comp_2.get_all_v().get(key).pos
+            pos_list_2.append(node_pos)
+
+        print("FIRST", pos_list_1)
+        print("SECOND", pos_list_2)
+        self.assertEqual(pos_list_1, pos_list_2)
+        print("Passed!")
+
+        print("load_from_json -> test 13")
+        """# check if the positions are represented as numbers (and not char, string etc..). expected -> TRUE"""
+        for i in range(pos_list_1.__len__()):
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i)[0], numbers.Number))
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i)[1], numbers.Number))
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i)[2], numbers.Number))
         print("Passed All!")
 
     def test_save_to_json(self):
-        self.fail()
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        """# load A0.json to graph and then save it as "A0.saved.json" ."""
+        graph_algo.load_from_json("../data/A0.json")
+        graph = graph_algo.get_graph()
+        graph_algo.save_to_json("../data/A0_saved.json")
+
+        print("save_to_json -> test 1")
+        """# load the saved file ("A0_saved.json") . expected -> True"""
+        graph_temp: GraphInterface = DiGraph()
+        graph_algo_temp: GraphAlgoInterface = GraphAlgo(graph_temp)
+        self.assertTrue(graph_algo_temp.load_from_json("../data/A0_saved.json"))
+        graph_temp = graph_algo_temp.get_graph()
+        os.remove("../data/A0_saved.json")
+
+        """# compare between the two graphs."""
+        print("save_to_json -> test 2")
+        """# e_size method"""
+        self.assertEqual(graph_temp.e_size(), graph.e_size())
+        print("Passed!")
+
+        print("save_to_json -> test 3")
+        """# v_size method"""
+        self.assertEqual(graph_temp.v_size(), graph.v_size())
+        print("Passed!")
+
+        print("save_to_json -> test 4")
+        """# get_all_v method"""
+        self.assertEqual(graph_temp.get_all_v().__len__(), graph.get_all_v().__len__())
+        print("Passed!")
+
+        print("save_to_json -> test 5")
+        """# all_out_edges_of_node method. node_checked (5)"""
+        self.assertEqual(graph_temp.all_out_edges_of_node(1), graph.all_out_edges_of_node(1))
+        print("Passed!")
+
+        print("save_to_json -> test 6")
+        """# all_in_edges_of_node method. node_checked (9)"""
+        self.assertEqual(graph_temp.all_out_edges_of_node(3), graph.all_out_edges_of_node(3))
+        print("Passed All!")
 
     def test_shortest_path(self):
 
@@ -189,10 +268,7 @@ class TestGraphAlgo(TestCase):
         """# INIT graph T0.json"""
         graph_t0: GraphInterface = DiGraph()
         graph_t0_algo: GraphAlgoInterface = GraphAlgo(graph_t0)
-       # graph_t0_algo.load_from_json("data/T0.json")
         graph_t0_algo.load_from_json("../data/T0.json")
-
-
 
         print("shortest_path -> test 5 <T0.json>")
         """# shortest path in T0.json from src:0 des:3. expected -> value(2.8) path {0,1,3}"""
@@ -202,13 +278,102 @@ class TestGraphAlgo(TestCase):
         print("shortest_path -> test 6 <T0.json>")
         """# shortest path in T0.json from src:3 dest:0. expected -> value(infinity) path{}"""
         self.assertEqual((float('inf'), []), graph_t0_algo.shortest_path(3, 0))
+        print("Passed!")
+
+        print("shortest_path -> test 7")
+        """# INIT graph with node starting at id 5 instead of 0."""
+        graph_last: GraphInterface = DiGraph()
+        graph_last_algo: GraphAlgoInterface = GraphAlgo(graph_last)
+
+        for i in range(5, 11):
+            graph_last.add_node(i)
+
+        graph_last.add_edge(5, 6, 5)
+        graph_last.add_edge(5, 7, 11)
+        graph_last.add_edge(6, 7, 3)
+        graph_last.add_edge(6, 9, 18)
+        graph_last.add_edge(6, 10, 11)
+        graph_last.add_edge(7, 5, 6)
+        graph_last.add_edge(7, 9, 21)
+        graph_last.add_edge(8, 9, 1)
+        graph_last.add_edge(8, 10, 7)
+        graph_last.add_edge(9, 6, 1)
+        graph_last.add_edge(10, 8, 13)
+
+        """# testing on src:8 dest:5. expected -> value(11) path {8, 9, 6, 7, 5}"""
+        self.assertEqual((11, [8, 9, 6, 7, 5]), graph_last_algo.shortest_path(8, 5))
         print("Passed All!")
 
     def test_center_point(self):
-        self.fail()
+
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        print("center_point -> test 1 <A0.json>")
+        """# loading A0.json and check its center. expected -> (7, 6.806805834715163)"""
+        graph_algo.load_from_json("../data/A0.json")
+        self.assertEqual((7, 6.806805834715163), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 2 <A1.json>")
+        """# loading A1.json and check its center. expected -> (8, 9.925289024973141)"""
+        graph_algo.load_from_json("../data/A1.json")
+        self.assertEqual((8, 9.925289024973141), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 3 <A2.json>")
+        """# loading A2.json and check its center. expected -> (0, 7.819910602212574)"""
+        graph_algo.load_from_json("../data/A2.json")
+        self.assertEqual((0, 7.819910602212574), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 4 <A3.json>")
+        """# loading A3.json and check its center. expected -> (2, 8.182236568942237)"""
+        graph_algo.load_from_json("../data/A3.json")
+        self.assertEqual((2, 8.182236568942237), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 5 <A4.json>")
+        """# loading A4.json and check its center. expected -> (6, 8.071366078651435)"""
+        graph_algo.load_from_json("../data/A4.json")
+        self.assertEqual((6, 8.071366078651435), graph_algo.centerPoint())
+        print("Passed!")
+
+        print("center_point -> test 6 <A5.json>")
+        """# loading A5.json and check its center. expected -> (40, 9.291743173960954)"""
+        graph_algo.load_from_json("../data/A5.json")
+        self.assertEqual((40, 9.291743173960954), graph_algo.centerPoint())
+        print("Passed All!")
 
     def test_tsp(self):
-        self.fail()
+        graph: GraphInterface = DiGraph()
+        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+
+        """# INIT new connected graph"""
+        for i in range(1, 5):
+            graph.add_node(i)
+        graph.add_edge(1, 2, 10)
+        graph.add_edge(1, 3, 15)
+        graph.add_edge(1, 4, 20)
+        graph.add_edge(2, 1, 10)
+        graph.add_edge(2, 4, 25)
+        graph.add_edge(2, 3, 35)
+        graph.add_edge(3, 2, 35)
+        graph.add_edge(3, 4, 30)
+        graph.add_edge(3, 1, 15)
+        graph.add_edge(4, 1, 20)
+        graph.add_edge(4, 2, 25)
+        graph.add_edge(4, 3, 30)
+
+        print("TSP -> test 1")
+        """# test tsp method on sorted list [1,2,3,4]. expected -> ([3,1,2,4], 50)"""
+        self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([1, 2, 3, 4]))
+        print("Passed!")
+
+        print("TSP -> test 2")
+        """# test tsp method on unsorted list [2,1,3,4]. expected -> ([3,1,2,4], 50)"""
+        self.assertEqual(([3, 1, 2, 4], 50), graph_algo.TSP([2, 1, 3, 4]))
+        print("Passed All!")
 
     def test_plot_graph(self):
         self.fail()
