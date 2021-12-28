@@ -16,7 +16,7 @@ import heapq
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
-    def __int__(self, graph=None):
+    def __int__(self):
         self.graph: GraphInterface = DiGraph()
 
     def __init__(self, graph: GraphInterface):
@@ -246,7 +246,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     TSP:
         This method solve the problem "Traveling Salesman Problem"
         by trying all the Combinations of the faster routes for every node
-        in the list we get we can find the best of them .
+        in the list we can find the best of them .
         
         @param list: list of node.id 
         @return: List of the the best route , weight of the route list 
@@ -267,7 +267,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             node: Node = graph_algo.get_all_v().get(i)
             path_int.append(node)
 
-            # list of all the node expet the current
+            # list of all the node except the current
             miss = sort_node_list.copy()
             miss.remove(node.id)
 
