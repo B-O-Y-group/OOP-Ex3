@@ -147,6 +147,30 @@ class TestGraphAlgo(TestCase):
 
         print("load_from_json -> test 11")
         self.assertFalse(new_graph.remove_node(5))
+        print("Passed!")
+
+        print("load_from_json -> test 12")
+        """# INIT graph to compare nodes positions."""
+        graph_comp_1: GraphInterface = DiGraph()
+        graph_algo_comp_1: GraphAlgoInterface = GraphAlgo(graph_comp_1)
+        graph_algo_comp_1.load_from_json("../data/A0.json")
+        graph_comp_1 = graph_algo_comp_1.get_graph()
+        pos_list_1 = []
+        for key in graph_comp_1.get_all_v():
+            node_pos = graph_comp_1.get_all_v().get(key).pos
+            pos_list_1.append(node_pos)
+
+        """# INIT new graph like "graph_comp_1" and compare nodes positions. expected -> TRUE"""
+        graph_comp_2: GraphInterface = DiGraph()
+        graph_algo_comp_2: GraphAlgoInterface = GraphAlgo(graph_comp_2)
+        graph_algo_comp_2.load_from_json("../data/A0.json")
+        graph_comp_2 = graph_algo_comp_2.get_graph()
+        pos_list_2 = []
+        for key in graph_comp_2.get_all_v():
+            node_pos = graph_comp_2.get_all_v().get(key).pos
+            pos_list_2.append(node_pos)
+
+        self.assertEqual(pos_list_1, pos_list_2)
         print("Passed All!")
 
     def test_save_to_json(self):
