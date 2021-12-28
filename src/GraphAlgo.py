@@ -14,7 +14,7 @@ import heapq
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
-    def __int__(self, graph = None):
+    def __int__(self, graph=None):
         self.graph: GraphInterface = DiGraph()
 
     def __init__(self, graph: GraphInterface):
@@ -50,11 +50,11 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
                 else:
                     p = n["pos"].split(",")
-                    x: float = p[0]
-                    y: float = p[1]
-                    z: float = p[2]
-                    # pos = (p[0], p[1], p[2])
-                    pos = (x, y, z)
+                    x = p[0]
+                    y = p[1]
+                    z = p[2]
+
+                    pos = (float(x), float(y), float(z))
                     g.add_node(node_id=n["id"], pos=pos)
 
             for e in dic["Edges"]:
