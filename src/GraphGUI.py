@@ -7,8 +7,11 @@ import math
 
 pygame.font.init()
 FONT = pygame.font.SysFont("Ariel", 22)
+BUTTON_FONT = pygame.font.SysFont("Ariel", 30)
 
 screen = pygame.display.set_mode((700, 500), flags=RESIZABLE)  # check!
+SCREEN_TOPLEFT = screen.get_rect().topleft
+SCREEN_BUTTON_R = screen.get_width() / 5
 
 
 class Button:
@@ -21,6 +24,12 @@ class Button:
 
     def press(self):
         self.is_clicked = not self.is_clicked
+
+
+class NodeScreen:
+    def __init__(self, rect: pygame.rect, id):
+        self.id = id
+        self.rect = rect
 
 
 """------------------> START SCALE METHODS"""
@@ -79,57 +88,136 @@ def arrow(start, end, d, h, color):
     pygame.draw.polygon(screen, color, points)
 
 
-algo_results = []
+shortest_path = {}
+center_id = []
+nodes_screen = []
+console = ""
 
 
-def on_clicked(button: Button):
-    global algo_results
+def clicked_center(button: Button):
+    global center_id
     center = button.func()
-    algo_results = center[0]
+    center_id.append(center[0])
 
-def draw(graph: GraphInterface):
-    pygame.draw.rect(screen, button.color, button.rect)
+
+def clicked_shortest(button: Button):
+    global shortest_path
+    shortest_path_func = button.func(2, 5)
+    shortest_path["dist"] = shortest_path_func[0]
+    shortest_path["list"] = shortest_path_func[1]
+    print(shortest_path)
+
+
+def draw(graph: GraphInterface, node_display=-1):
+    """draw menu"""
+    pygame.draw.rect(screen, center_button.color, center_button.rect, 3)
+    pygame.draw.rect(screen, shortest_button.color, shortest_button.rect, 3)
+
+    if node_display != -1:
+        node_text = FONT.render(str(node_display), True, (0, 0, 0))
+        screen.blit(node_text, (300, 20))
+
+    """center_point button box draw"""
+    center_but_text = BUTTON_FONT.render(center_button.text, True, (0, 0, 0))
+    center_of_button = center_button.rect.center
+    screen.blit(center_but_text, (center_button.rect.topleft[0] + 10, center_button.rect.topleft[1] + 10))
+
+    """shortest_button box draw"""
+    shortest_button_text = BUTTON_FONT.render(shortest_button.text, True, (0, 0, 0))
+    screen.blit(shortest_button_text, (shortest_button.rect.topleft[0] + 7, shortest_button.rect.topleft[1] + 10))
+
     for src in graph.get_all_v().values():
         node: Node = src
         x = my_scale(data=node.pos[0], x=True)
         y = my_scale(data=node.pos[1], y=True)
         src_text = FONT.render(str(node.id), True, (0, 0, 0))
+
+        node_radius = 10
+        nodes_screen.append(NodeScreen(pygame.Rect((x - node_radius, y - node_radius), (20, 20)), node.id))
+
         node_center = (int(node.pos[0]), int(node.pos[1]))
         # print(node)
-        node_radius = 10
-        pygame.draw.circle(screen, color=(250, 204, 58, 255), center=(x, y), radius=node_radius)
+
+        if (node.id) in center_id:
+            pygame.draw.circle(screen, color=(250, 0, 0, 255), center=(x, y), radius=node_radius)
+
+        elif shortest_path.get("list"):
+            if node.id in shortest_path["list"]:
+                pygame.draw.circle(screen, color=(192, 250, 247, 255), center=(x, y), radius=node_radius)
+            else:
+                pygame.draw.circle(screen, color=(250, 204, 58, 255), center=(x, y), radius=node_radius)
+
+        else:
+            pygame.draw.circle(screen, color=(250, 204, 58, 255), center=(x, y), radius=node_radius)
+
         screen.blit(src_text, (x - (node_radius / 2), y - (node_radius / 2)))
         for dest in graph.all_out_edges_of_node(node.id):
             dest: Node = graph.get_all_v()[dest]
             dest_x = my_scale(data=dest.pos[0], x=True)
             dest_y = my_scale(data=dest.pos[1], y=True)
-            arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
-            # if(node.id, dest.id) in algo_results:
-            #     arrow((x, y), (dest_x, dest_y), 17, 7, color=(0, 0, 255))
-            # else:
-            #     arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
+            if shortest_path.get("list"):
+
+                if node.id in shortest_path["list"]:
+                    arrow((x, y), (dest_x, dest_y), 17, 7, color=(192, 250, 247))
+                else:
+                    arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
+            else:
+                arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
 
 
 """------------------> END Draw Methods <-----------------"""
 
 
 def display(algo: GraphAlgoInterface):
-    button.func = algo.centerPoint
+    center_button.func = algo.centerPoint
+    shortest_button.func = algo.shortest_path
     min_max(algo.get_graph())
+    node_display = -1
     run = True
     while run:
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 run = False
             if e.type == pygame.MOUSEBUTTONDOWN:
-                if button.rect.collidepoint(e.pos):
-                    on_clicked(button)
+                """Actions of center button"""
+                if center_button.rect.collidepoint(e.pos):
+                    center_button.press()
+                    """Stop action of other buttons"""
+                    if shortest_button.is_clicked:
+                        shortest_button.press()
+                        shortest_path.clear()
+                    """manage button activity"""
+                    if center_button.is_clicked:
+                        clicked_center(center_button)
+                    else:
+                        center_id.clear()
+
+                """Actions of shortestPath button"""
+                if shortest_button.rect.collidepoint(e.pos):
+                    shortest_button.press()
+                    """Stop action of other buttons"""
+                    if center_button.is_clicked:
+                        center_button.press()
+                        center_id.clear()
+                    """manage button activity"""
+                    if shortest_button.is_clicked:
+                        clicked_shortest(shortest_button)
+
+                    else:
+                        shortest_path.clear()
+                for n in nodes_screen:
+                    if n.rect.collidepoint(e.pos):
+                        node_display = n.id
+
         screen.fill((155, 117, 117, 255))
-        draw(algo.get_graph())
+        draw(algo.get_graph(), node_display)
         pygame.display.update()
 
 
-button = Button(pygame.Rect((0, 0), (100, 40)), (200, 200, 0), "Algo")
+center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0, 0), "CenterPoint")
+shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
+                         "ShortestPath")
+
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph: GraphInterface = DiGraph()
