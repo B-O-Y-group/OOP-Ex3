@@ -14,6 +14,9 @@ import heapq
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
+    def __int__(self, graph = None):
+        self.graph: GraphInterface = DiGraph()
+
     def __init__(self, graph: GraphInterface):
         self.graph = graph
 

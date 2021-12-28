@@ -179,8 +179,9 @@ class TestGraphAlgo(TestCase):
         print("load_from_json -> test 13")
         """# check if the positions are represented as numbers (and not char, string etc..). expected -> TRUE"""
         for i in range(pos_list_1.__len__()):
-            # self.assertTrue(isinstance(pos_list_1.__getitem__(i), numbers.Number))
-            self.assertEqual(isinstance(1, numbers.Number))
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i)[0], numbers.Number))
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i)[1], numbers.Number))
+            self.assertTrue(isinstance(pos_list_1.__getitem__(i)[2], numbers.Number))
         print("Passed All!")
 
     def test_save_to_json(self):
