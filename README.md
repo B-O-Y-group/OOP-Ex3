@@ -42,6 +42,8 @@ in the list we can find the best of them .
 
 
 #Instructions for Gui:
+
+
 click on the button "center point Algorithm"
 And the red point is the center of this graph.
 
