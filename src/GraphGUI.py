@@ -6,6 +6,9 @@ import math
 from pygame import gfxdraw
 from tkinter import filedialog as fd
 
+from src import GraphAlgoInterface
+from src.GraphAlgo import GraphAlgo
+
 pygame.font.init()
 FONT = pygame.font.SysFont("Ariel", 20)
 BUTTON_FONT = pygame.font.SysFont("Ariel", 30)
@@ -156,12 +159,15 @@ def scale(data, min_screen, max_screen, min_data, max_data):
 min_x = min_y = max_x = max_y = 0
 
 
-def min_max(graph: GraphInterface = None):
+def min_max(graph=None):
     global min_x, min_y, max_x, max_y
-    min_x = min(list(graph.get_all_v().values()), key=lambda n: n.pos[0]).pos[0]
-    min_y = min(list(graph.get_all_v().values()), key=lambda n: n.pos[1]).pos[1]
-    max_x = max(list(graph.get_all_v().values()), key=lambda n: n.pos[0]).pos[0]
-    max_y = max(list(graph.get_all_v().values()), key=lambda n: n.pos[1]).pos[1]
+    try:
+        min_x = min(list(graph.get_all_v().values()), key=lambda n: n.pos[0]).pos[0]
+        min_y = min(list(graph.get_all_v().values()), key=lambda n: n.pos[1]).pos[1]
+        max_x = max(list(graph.get_all_v().values()), key=lambda n: n.pos[0]).pos[0]
+        max_y = max(list(graph.get_all_v().values()), key=lambda n: n.pos[1]).pos[1]
+    except:
+        TypeError
 
 
 shortest_path = {}
@@ -175,15 +181,15 @@ start_tsp = False
 
 
 class GUI:
-    # def __init__(self, graph):
-    #     self.graph_algo = GraphAlgo(graph)
-    #     self.display(self.graph_algo)
+    def __init__(self, graph):
+        self.graph_algo = GraphAlgo(graph)
+        self.display(self.graph_algo)
 
-    def __init__(self, file: str = None):
-        graph: GraphInterface = DiGraph()
-        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-        graph_algo.load_from_json(file)
-        self.display(graph_algo)
+    # def __init__(self, file: str = None):
+    #     graph = DiGraph()
+    #     self.graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    #     self.graph_algo.load_from_json(file)
+    #     self.display(self.graph_algo)
 
     def init_graph(self, file: str):
         self.graph_algo.load_from_json(file)
@@ -337,73 +343,79 @@ class GUI:
         for src in graph.get_all_v().values():
             global RADIUS
             node: Node = src
+            x = None
+            y = None
 
-            x = self.my_scale(data=node.pos[0], x=True)
-            y = self.my_scale(data=node.pos[1], y=True)
+            try:
+                x = self.my_scale(data=node.pos[0], x=True)
+                y = self.my_scale(data=node.pos[1], y=True)
+            except:
+                TypeError
             src_text = FONT.render(str(node.id), True, (0, 0, 0))
 
             v = graph.v_size()
 
             node_radius = RADIUS
-            nodes_screen.append(NodeScreen(pygame.Rect((x - node_radius, y - node_radius), (20, 20)), node.id))
+            if x is not None and y is not None:
+                nodes_screen.append(NodeScreen(pygame.Rect((x - node_radius, y - node_radius), (20, 20)), node.id))
 
-            gfxdraw.aacircle(screen, int(x), int(y), node_radius, (0, 0, 0))
+                gfxdraw.aacircle(screen, int(x), int(y), node_radius, (0, 0, 0))
 
-            if node.id in center_id:
-                gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 0, 0))
-                gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 0, 0))
+                if node.id in center_id:
+                    gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 0, 0))
+                    gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 0, 0))
 
 
-            elif shortest_path.get("list"):
-                if node.id in shortest_path["list"]:
-                    gfxdraw.aacircle(screen, x=x, y=y, r=node_radius - 1, color=(192, 250, 247))
-                    gfxdraw.filled_circle(screen, x=x, y=y, r=node_radius - 1, color=(192, 250, 247))
+                elif shortest_path.get("list"):
+                    if node.id in shortest_path["list"]:
+                        gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (192, 250, 247))
+                        gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (192, 250, 247))
+                    else:
+                        gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
+                        gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
+
                 else:
-                    gfxdraw.aacircle(screen, x=x, y=y, r=node_radius - 1, color=(250, 204, 58))
-                    gfxdraw.filled_circle(screen, x=x, y=y, r=node_radius - 1, color=(250, 204, 58))
+                    gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
+                    gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
 
-            else:
-                gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
-                gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
+                screen.blit(src_text, (x - (node_radius / 2), y - (node_radius / 2)))
+                try:
+                    for dest in graph.all_out_edges_of_node(node.id):
 
-            screen.blit(src_text, (x - (node_radius / 2), y - (node_radius / 2)))
-            try:
-                for dest in graph.all_out_edges_of_node(node.id):
+                        dest: Node = graph.get_all_v()[dest]
+                        dest_x = self.my_scale(data=dest.pos[0], x=True)
+                        dest_y = self.my_scale(data=dest.pos[1], y=True)
 
-                    dest: Node = graph.get_all_v()[dest]
-                    dest_x = self.my_scale(data=dest.pos[0], x=True)
-                    dest_y = self.my_scale(data=dest.pos[1], y=True)
+                        src_arrow = ()
+                        dest_arrow = ()
 
-                    src_arrow = ()
-                    dest_arrow = ()
+                        collition_dest = node_line_inter((x, y), (dest_x, dest_y), (dest_x, dest_y), node_radius)
 
-                    collition_dest = node_line_inter((x, y), (dest_x, dest_y), (dest_x, dest_y), node_radius)
+                        for i in range(collition_dest.__len__() - 1):
+                            if math.dist((x, y), collition_dest[i]) < math.dist((x, y), collition_dest[i + 1]):
+                                dest_arrow = collition_dest[i]
+                            else:
+                                dest_arrow = collition_dest[i + 1]
 
-                    for i in range(collition_dest.__len__() - 1):
-                        if math.dist((x, y), collition_dest[i]) < math.dist((x, y), collition_dest[i + 1]):
-                            dest_arrow = collition_dest[i]
-                        else:
-                            dest_arrow = collition_dest[i + 1]
+                        collition_src = node_line_inter((dest_x, dest_y), (x, y), (x, y), node_radius)
 
-                    collition_src = node_line_inter((dest_x, dest_y), (x, y), (x, y), node_radius)
+                        for i in range(collition_src.__len__() - 1):
+                            if math.dist((dest_x, dest_y), collition_src[i]) <= math.dist((dest_x, dest_y),
+                                                                                          collition_src[i + 1]):
+                                src_arrow = collition_src[i]
+                            else:
+                                src_arrow = collition_src[i + 1]
 
-                    for i in range(collition_src.__len__() - 1):
-                        if math.dist((dest_x, dest_y), collition_src[i]) <= math.dist((dest_x, dest_y),
-                                                                                      collition_src[i + 1]):
-                            src_arrow = collition_src[i]
-                        else:
-                            src_arrow = collition_src[i + 1]
+                        if shortest_path.get("list"):
 
-                    if shortest_path.get("list"):
-
-                        if (node.id, dest.id) in shortest_path["edges"]:
-                            self.arrow(src_arrow, dest_arrow, 17, 7, color=(192, 250, 247))
+                            if (node.id, dest.id) in shortest_path["edges"]:
+                                self.arrow(src_arrow, dest_arrow, 17, 7, color=(192, 250, 247))
+                            else:
+                                self.arrow(src_arrow, dest_arrow, 17, 7, color=(255, 255, 255))
                         else:
                             self.arrow(src_arrow, dest_arrow, 17, 7, color=(255, 255, 255))
-                    else:
-                        self.arrow(src_arrow, dest_arrow, 17, 7, color=(255, 255, 255))
-            except TypeError:
-                pass
+                except TypeError:
+                    pass
 
     """------------------> END Draw Methods <-----------------"""
 
@@ -486,8 +498,7 @@ class GUI:
                     if save_button.rect.collidepoint(e.pos):
                         save_button.press()
                         if save_button.is_clicked:
-                            filename = fd.asksaveasfilename()
-                            print("PATH --> ", filename)
+                            filename = f"{fd.asksaveasfilename()}.json"
                             save_button.is_clicked = False
                             self.graph_algo.save_to_json(filename)
 
@@ -576,31 +587,3 @@ save_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 4, 0), (
 action_button = ActionButton(pygame.Rect((screen.get_rect().right - SCREEN_BUTTON_R / 2, screen.get_height() - 40),
                                          (screen.get_rect().right, screen.get_rect().bottomright[1])), (0, 0, 0),
                              "START")
-
-if __name__ == '__main__':
-    graph: GraphInterface = DiGraph()
-    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    # graph_algo.load_from_json("../data/A0.json")
-
-    # graph: GraphInterface = DiGraph()
-    # graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    #
-    # graph.add_node(0, (35.18753053591606, 32.10378225882353, 0.0))
-    # graph.add_node(1, (35.18958953510896, 32.10785303529412, 0.0))
-    # graph.add_node(2, (35.19341035835351, 32.10610841680672, 0.0))
-    # graph.add_node(3, (35.197528356739305, 32.1053088, 0.0))
-    # graph.add_node(4, (35.2016888087167, 32.10601755126051, 0.0))
-    # graph.add_node(5, (35.20582803389831, 32.10625380168067, 0.0))
-    #
-    # graph.add_edge(0, 2, 5)
-    # graph.add_edge(1, 0, 42)
-    # graph.add_edge(1, 3, 5)
-    # graph.add_edge(2, 0, 7)
-    # graph.add_edge(2, 5, 1)
-    # graph.add_edge(3, 1, 11)
-    # graph.add_edge(3, 2, 1)
-    # graph.add_edge(3, 4, 3)
-    # graph.add_edge(4, 5, 1)
-    # graph.add_edge(5, 3, 5)
-    # print(graph_algo.get_graph())
-    GUI("../data/A1.json")
