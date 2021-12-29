@@ -5,13 +5,15 @@ import sys
 from abc import ABC
 from typing import List
 
-from src import GraphInterface
+from src import GraphInterface, GraphGUI
 from src.GraphAlgoInterface import GraphAlgoInterface
 import json
 from DiGraph import *
 from Node import *
 from PriorityQueue import *
 import heapq
+from GraphGUI import *
+from src.GraphGUI import GUI
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
@@ -19,7 +21,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     def __int__(self):
         self.graph: GraphInterface = DiGraph()
 
-    def __init__(self, graph: GraphInterface):
+    def __init__(self, graph: GraphInterface = None):
         self.graph = graph
 
     """
@@ -333,11 +335,5 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 ans += self.shortest_path(path[i].id, path[i + 1].id)[0]
         return ans
 
-
-def plot_graph(self) -> None:
-    pass
-
-
-
-
-
+    def plot_graph(self) -> None:
+        gui: GraphGUI = GUI(self.graph)

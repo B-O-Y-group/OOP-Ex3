@@ -53,14 +53,14 @@ def check1():
        This function tests the naming (main methods of the GraphAlgo class, as defined in GraphAlgoInterface.
     :return:
     """
-    g_algo = GraphAlgo()  # init an empty graph - for the GraphAlgo
-    file = "../data/T0.json"
-    g_algo.load_from_json(file)  # init a GraphAlgo from a json file
-    print(g_algo.shortest_path(0, 3))
-    print(g_algo.shortest_path(3, 1))
-    print(g_algo.centerPoint())
-    g_algo.save_to_json(file + '_saved')
-    g_algo.plot_graph()
+    # g_algo = GraphAlgo()  # init an empty graph - for the GraphAlgo
+    # file = "../data/T0.json"
+    # g_algo.load_from_json(file)  # init a GraphAlgo from a json file
+    # print(g_algo.shortest_path(0, 3))
+    # print(g_algo.shortest_path(3, 1))
+    # print(g_algo.centerPoint())
+    # g_algo.save_to_json(file + '_saved')
+    # g_algo.plot_graph()
 
 
 def check2():
@@ -106,19 +106,19 @@ def check3():
 
 
 if __name__ == '__main__':
-    # check1()
+     check2()
 
-    g = DiGraph()  # creates an empty directed graph
-    g_algo = GraphAlgo(g)
-
-    list = []
-    for i in range(0, 48):
-        list.append(i)
-    g_algo.load_from_json("../data/1000Nodes.json")
-    start = timer()
-    # g_algo.load_from_json("../data/A5.json")
-    # print(g_algo.get_graph())
-
-    print(g_algo.centerPoint())
-    end = timer()
-    print(end - start)  # Time in seconds, e.g. 5.38091952400282
+    # g = DiGraph()  # creates an empty directed graph
+    # g_algo = GraphAlgo(g)
+    #
+    # list = []
+    # for i in range(0, 48):
+    #     list.append(i)
+    # g_algo.load_from_json("../data/1000Nodes.json")
+    # start = timer()
+    # # g_algo.load_from_json("../data/A5.json")
+    # # print(g_algo.get_graph())
+    #
+    # print(g_algo.centerPoint())
+    # end = timer()
+    # print(end - start)  # Time in seconds, e.g. 5.38091952400282
