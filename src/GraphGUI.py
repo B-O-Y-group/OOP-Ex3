@@ -4,6 +4,7 @@ from GraphAlgo import *
 from DiGraph import *
 from pygame.constants import RESIZABLE
 import math
+from tkinter import filedialog as fd
 
 pygame.font.init()
 FONT = pygame.font.SysFont("Ariel", 22)
@@ -142,7 +143,11 @@ class GUI:
         graph: GraphInterface = DiGraph()
         graph_algo: GraphAlgoInterface = GraphAlgo(graph)
         json_file = file
-        graph_algo.load_from_json(json_file)
+        graph_algo.load_from_json(file)
+        self.display(graph_algo)
+
+    def init_graph(self, file: str):
+        graph_algo.load_from_json(file)
         self.display(graph_algo)
 
     def my_scale(self, data, x=False, y=False):
@@ -395,9 +400,15 @@ class GUI:
                         if tsp_button.is_clicked:
                             console.set_func("TSP")
 
-                    """Actions of shortestPath button"""
+                    """Actions of LOAD button"""
                     if load_button.rect.collidepoint(e.pos):
                         load_button.press()
+                        self.stop_other_buttons(load=True)
+                        if load_button.is_clicked:
+                            filename = fd.askopenfilename()
+                            load_button.is_clicked = False
+                            self.init_graph(filename)
+                            run = False
 
                     """relevant methods for shortest_path"""
                     if shortest_button.is_clicked:
@@ -436,7 +447,7 @@ class GUI:
             self.draw(algo.get_graph(), node_display)
             pygame.display.update()
 
-    def stop_other_buttons(self, tsp=False, shortest=False, center=False):
+    def stop_other_buttons(self, tsp=False, shortest=False, center=False, load=False):
         if center:
             if shortest_button.is_clicked:
                 shortest_button.press()
@@ -459,7 +470,17 @@ class GUI:
                 shortest_counter = 0
                 center_button.press()
                 center_id.clear()
-
+        if load:
+            if shortest_button.is_clicked:
+                shortest_button.press()
+                shortest_path.clear()
+            if center_button.is_clicked:
+                shortest_counter = 0
+                center_button.press()
+                center_id.clear()
+            if tsp_button.is_clicked:
+                tsp_button.press()
+                cities.clear()
 
 center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0, 0), "CenterPoint")
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
