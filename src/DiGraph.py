@@ -33,8 +33,6 @@ class DiGraph(GraphInterface, ABC):
         return self.edges_in.get(id1)
 
     def all_out_edges_of_node(self, id1: int) -> dict:
-        if id1 not in self.edges_out:
-            print(id1, "not existing in this dict")  # check if exist
         return self.edges_out.get(id1)
 
     def get_mc(self) -> int:
