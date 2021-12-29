@@ -320,18 +320,21 @@ class GUI:
                 pygame.draw.circle(screen, color=(250, 204, 58, 255), center=(x, y), radius=node_radius)
 
             screen.blit(src_text, (x - (node_radius / 2), y - (node_radius / 2)))
-            for dest in graph.all_out_edges_of_node(node.id):
-                dest: Node = graph.get_all_v()[dest]
-                dest_x = self.my_scale(data=dest.pos[0], x=True)
-                dest_y = self.my_scale(data=dest.pos[1], y=True)
-                if shortest_path.get("list"):
+            try:
+                for dest in graph.all_out_edges_of_node(node.id):
+                    dest: Node = graph.get_all_v()[dest]
+                    dest_x = self.my_scale(data=dest.pos[0], x=True)
+                    dest_y = self.my_scale(data=dest.pos[1], y=True)
+                    if shortest_path.get("list"):
 
-                    if (node.id, dest.id) in shortest_path["edges"]:
-                        self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(192, 250, 247))
+                        if (node.id, dest.id) in shortest_path["edges"]:
+                            self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(192, 250, 247))
+                        else:
+                            self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
                     else:
                         self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
-                else:
-                    self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
+            except TypeError:
+                pass
 
     """------------------> END Draw Methods <-----------------"""
 
@@ -410,6 +413,15 @@ class GUI:
                             self.init_graph(filename)
                             run = False
 
+                    """Actions of SAVE button"""
+                    if save_button.rect.collidepoint(e.pos):
+                        save_button.press()
+                        if save_button.is_clicked:
+                            filename = fd.asksaveasfilename()
+                            print("PATH --> ", filename)
+                            save_button.is_clicked = False
+                            graph_algo.save_to_json(filename)
+
                     """relevant methods for shortest_path"""
                     if shortest_button.is_clicked:
                         for n in nodes_screen:
@@ -481,6 +493,7 @@ class GUI:
             if tsp_button.is_clicked:
                 tsp_button.press()
                 cities.clear()
+
 
 center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0, 0), "CenterPoint")
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
