@@ -20,7 +20,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         self.graph: GraphInterface = DiGraph()
 
     def __init__(self, graph: GraphInterface):
-            self.graph = graph
+        self.graph = graph
 
     """
     get_graph:
@@ -45,10 +45,11 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
             for n in dic["Nodes"]:
                 if len(n.keys()) == 1:
-                    # x = None
-                    # y = None
-                    # pos = (x, y, 0)
-                    g.add_node(node_id=n["id"], pos=None)
+                    x = random.randint(0, 100)
+                    y = random.randint(0, 100)
+
+                    pos = (x, y, 0)
+                    g.add_node(node_id=n["id"], pos=pos)
 
                 else:
                     p = n["pos"].split(",")
@@ -218,7 +219,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             curr = pq.pop()
             curr.set_tag(2)
 
-
             for i in graph_algo.all_out_edges_of_node(curr.id):
 
                 temp_dist = 0
@@ -259,7 +259,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         sort_node_list = node_lst
         sort_node_list.sort()
         path = []
- 
+
         for i in sort_node_list:
 
             path_int = []
@@ -318,7 +318,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 node: Node = graph_algo.get_all_v().get(shortest[i])
                 ans.append(node)
 
-
             j = 0
             while len(miss) > j:
 
@@ -337,8 +336,6 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
 def plot_graph(self) -> None:
     pass
-3
-
 
 
 
