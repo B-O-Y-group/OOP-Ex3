@@ -13,6 +13,8 @@ from Node import *
 from PriorityQueue import *
 import heapq
 
+from src import GraphGUI
+from pygame.constants import RESIZABLE
 
 class GraphAlgo(GraphAlgoInterface, ABC):
 
@@ -335,9 +337,17 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
 
 def plot_graph(self) -> None:
-    pass
+    graph: GraphInterface = DiGraph()
+    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    graph_algo.load_from_json("../data/A0.json")
+
+    gui:GraphGUI = GraphGUI
+    gui.display(graph_algo)
 
 
+if __name__ == '__main__':
+    g = DiGraph()
+    gA = GraphAlgo(g)
+    gA.load_from_json("../data/A1.json")
 
-
-
+    print(gA.plot_graph())

@@ -70,6 +70,9 @@ class Console:
             else:
                 self.con_text = f"TSP path {cities}"
 
+        if func_name == "load":
+            init_json = "please enter a json file"
+
     def print_shortest(self, src, dest, path, dist):
         self.con_text = f"The Shortest Path from {src} to {dest} is {path}. distance: {dist}"
 
@@ -191,6 +194,16 @@ def draw(graph: GraphInterface, node_display=-1):
     else:
         pygame.draw.rect(screen, (222, 223, 219), tsp_button.rect)
 
+    if load_json_button.is_clicked:
+        pygame.draw.rect(screen, (177, 177, 177), load_json_button.rect)
+    else:
+        pygame.draw.rect(screen, (222, 223, 219), load_json_button.rect)
+
+    if save_json_button.is_clicked:
+        pygame.draw.rect(screen, (177, 177, 177), save_json_button.rect)
+    else:
+        pygame.draw.rect(screen, (222, 223, 219), save_json_button.rect)
+
     """Console Draw"""
     pygame.draw.rect(screen, (222, 223, 219), ((0, screen.get_height() - 40), screen.get_rect().bottomright))
     pygame.draw.rect(screen, (0, 0, 0), ((0, screen.get_height() - 40), screen.get_rect().bottomright), 3)
@@ -198,6 +211,8 @@ def draw(graph: GraphInterface, node_display=-1):
     pygame.draw.rect(screen, center_button.color, center_button.rect, 3)
     pygame.draw.rect(screen, shortest_button.color, shortest_button.rect, 3)
     pygame.draw.rect(screen, tsp_button.color, tsp_button.rect, 3)
+    pygame.draw.rect(screen, load_json_button.color, load_json_button.rect, 3)
+    pygame.draw.rect(screen, save_json_button.color, save_json_button.rect, 3)
 
     console_text = CONSOLE_FONT.render(console.con_text, True, (0, 0, 0))
     screen.blit(console_text, (5, screen.get_height() - 30))
@@ -217,6 +232,16 @@ def draw(graph: GraphInterface, node_display=-1):
     """TSP button box draw"""
     tsp_button_text = BUTTON_FONT.render(tsp_button.text, True, (0, 0, 0))
     screen.blit(tsp_button_text, (tsp_button.rect.topleft[0] + SCREEN_BUTTON_R / 3, tsp_button.rect.topleft[1] + 10))
+
+    """ load json box draw"""
+    load_json_button_text = BUTTON_FONT.render(load_json_button.text, True, (0, 0, 0))
+    screen.blit(load_json_button_text,
+                (load_json_button.rect.topleft[0] + SCREEN_BUTTON_R, load_json_button.rect.topleft[1] + 10))
+
+    """ save json box draw """
+    save_json_button_text = BUTTON_FONT.render(save_json_button.text, True, (0, 0, 0))
+    screen.blit(save_json_button_text,
+                (save_json_button.rect.topleft[0] + SCREEN_BUTTON_R + 60, save_json_button.rect.topleft[1] + 10))
 
     for src in graph.get_all_v().values():
         node: Node = src
@@ -270,6 +295,7 @@ def display(algo: GraphAlgoInterface):
     center_button.func = algo.centerPoint
     shortest_button.func = algo.shortest_path
     tsp_button.func = algo.TSP
+    load_json_button.func = algo.load_from_json("../data/A1.json")
     min_max(algo.get_graph())
     node_display = -1
 
@@ -292,6 +318,7 @@ def display(algo: GraphAlgoInterface):
                         console.set_func("CenterPoint")
                     else:
                         center_id.clear()
+                        
 
                 """Actions of shortestPath button"""
                 if shortest_button.rect.collidepoint(e.pos):
@@ -339,6 +366,14 @@ def display(algo: GraphAlgoInterface):
                 elif not center_button.is_clicked and not tsp_button.is_clicked:
                     console.welcome()
 
+                if load_json_button.is_clicked:
+                    console.set_func("load")
+                    load_json_button.press()
+                    algo.load_from_json("../data/A0.json")
+
+                if save_json_button.is_clicked:
+                    console.set_func("save")
+
         screen.fill((155, 117, 117, 255))
         draw(algo.get_graph(), node_display)
         pygame.display.update()
@@ -348,31 +383,12 @@ center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
                          "ShortestPath")
 tsp_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,), "TSP")
-
+load_json_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
+                          "load")
+save_json_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
+                          "save")
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
     graph_algo.load_from_json("../data/A0.json")
-
-    # graph: GraphInterface = DiGraph()
-    # graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    #
-    # graph.add_node(0, (35.18753053591606, 32.10378225882353, 0.0))
-    # graph.add_node(1, (35.18958953510896, 32.10785303529412, 0.0))
-    # graph.add_node(2, (35.19341035835351, 32.10610841680672, 0.0))
-    # graph.add_node(3, (35.197528356739305, 32.1053088, 0.0))
-    # graph.add_node(4, (35.2016888087167, 32.10601755126051, 0.0))
-    # graph.add_node(5, (35.20582803389831, 32.10625380168067, 0.0))
-    #
-    # graph.add_edge(0, 2, 5)
-    # graph.add_edge(1, 0, 42)
-    # graph.add_edge(1, 3, 5)
-    # graph.add_edge(2, 0, 7)
-    # graph.add_edge(2, 5, 1)
-    # graph.add_edge(3, 1, 11)
-    # graph.add_edge(3, 2, 1)
-    # graph.add_edge(3, 4, 3)
-    # graph.add_edge(4, 5, 1)
-    # graph.add_edge(5, 3, 5)
-    # print(graph_algo.get_graph())
     display(graph_algo)
