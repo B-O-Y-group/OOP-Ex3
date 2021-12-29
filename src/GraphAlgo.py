@@ -1,3 +1,5 @@
+from GraphGUI import *
+from GraphAlgoInterface import *
 import copy
 import math
 import random
@@ -9,8 +11,6 @@ from DiGraph import *
 from Node import *
 from PriorityQueue import *
 import heapq
-from GraphGUI import *
-from GraphAlgoInterface import *
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
@@ -18,7 +18,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
     def __int__(self):
         self.graph: GraphInterface = DiGraph()
 
-    def __init__(self, graph):
+    def __init__(self, graph: DiGraph = None):
         self.graph = graph
 
     """
@@ -333,26 +333,4 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         return ans
 
     def plot_graph(self) -> None:
-        temp: GraphAlgoInterface = GraphAlgo(self.graph)
-        GUI(temp.get_graph())
-
-
-if __name__ == '__main__':
-    # graph: GraphAlgoInterface = GraphAlgo()
-    # graph.load_from_json("../data/A0.json")
-    # graph.plot_graph()
-    g = DiGraph()  # creates an empty directed graph
-    for n in range(5):
-        g.add_node(n)
-    g.add_edge(0, 1, 1)
-    g.add_edge(0, 4, 5)
-    g.add_edge(1, 0, 1.1)
-    g.add_edge(1, 2, 1.3)
-    g.add_edge(1, 3, 1.9)
-    g.add_edge(2, 3, 1.1)
-    g.add_edge(3, 4, 2.1)
-    g.add_edge(4, 2, .5)
-    g_algo = GraphAlgo(g)
-    print(g_algo.centerPoint())
-    print(g_algo.TSP([1, 2, 4]))
-    g_algo.plot_graph()
+        GUI(self.graph)
