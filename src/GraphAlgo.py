@@ -20,7 +20,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         self.graph: GraphInterface = DiGraph()
 
     def __init__(self, graph: GraphInterface):
-        self.graph = graph
+            self.graph = graph
 
     """
     get_graph:
@@ -254,12 +254,12 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         graph_algo = copy.deepcopy(self.get_graph())
-        temp = math.inf
+        ansW = math.inf
 
         sort_node_list = node_lst
         sort_node_list.sort()
         path = []
-
+ 
         for i in sort_node_list:
 
             path_int = []
@@ -277,9 +277,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             # Calculate the weight of the route
             curr_weight = self.Calculate_weight(list_t)
 
-            if curr_weight < temp:
+            if curr_weight < ansW:
                 path = list_t
-                temp = curr_weight
+                ansW = curr_weight
 
         ans = []
 
@@ -287,7 +287,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             curr_node: Node = path[i]
             ans.append(curr_node.id)
 
-        return ans, temp
+        return ans, ansW
 
     def tsp_rec(self, path, miss, val, final_v):
         if len(miss) == 0:
@@ -337,3 +337,10 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
 def plot_graph(self) -> None:
     pass
+3
+
+
+
+
+
+
