@@ -109,16 +109,16 @@ if __name__ == '__main__':
     # check1()
 
     g = DiGraph()  # creates an empty directed graph
-    g_algo = GraphAlgo()
+    g_algo = GraphAlgo(g)
 
     list = []
     for i in range(0, 48):
         list.append(i)
-    g_algo.load_from_json("../data/A5.json")
+    g_algo.load_from_json("../data/1000Nodes.json")
     start = timer()
     # g_algo.load_from_json("../data/A5.json")
     # print(g_algo.get_graph())
 
-    print(g_algo.TSP(list))
+    print(g_algo.centerPoint())
     end = timer()
     print(end - start)  # Time in seconds, e.g. 5.38091952400282
