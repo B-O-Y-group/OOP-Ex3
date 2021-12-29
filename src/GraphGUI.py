@@ -6,6 +6,8 @@ import math
 from pygame import gfxdraw
 from tkinter import filedialog as fd
 
+from src import GraphAlgoInterface
+
 pygame.font.init()
 FONT = pygame.font.SysFont("Ariel", 20)
 BUTTON_FONT = pygame.font.SysFont("Ariel", 30)
@@ -175,15 +177,15 @@ start_tsp = False
 
 
 class GUI:
-    # def __init__(self, graph):
-    #     self.graph_algo = GraphAlgo(graph)
-    #     self.display(self.graph_algo)
+    def __init__(self, graph):
+        self.graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+        self.display(self.graph_algo)
 
-    def __init__(self, file: str = None):
-        graph: GraphInterface = DiGraph()
-        graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-        graph_algo.load_from_json(file)
-        self.display(graph_algo)
+    # def __init__(self, file: str = None):
+    #     graph: GraphInterface = DiGraph()
+    #     self.graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    #     self.graph_algo.load_from_json(file)
+    #     self.display(self.graph_algo)
 
     def init_graph(self, file: str):
         self.graph_algo.load_from_json(file)
@@ -357,11 +359,11 @@ class GUI:
 
             elif shortest_path.get("list"):
                 if node.id in shortest_path["list"]:
-                    gfxdraw.aacircle(screen, x=x, y=y, r=node_radius - 1, color=(192, 250, 247))
-                    gfxdraw.filled_circle(screen, x=x, y=y, r=node_radius - 1, color=(192, 250, 247))
+                    gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (192, 250, 247))
+                    gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (192, 250, 247))
                 else:
-                    gfxdraw.aacircle(screen, x=x, y=y, r=node_radius - 1, color=(250, 204, 58))
-                    gfxdraw.filled_circle(screen, x=x, y=y, r=node_radius - 1, color=(250, 204, 58))
+                    gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
+                    gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
 
             else:
                 gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
@@ -579,7 +581,6 @@ action_button = ActionButton(pygame.Rect((screen.get_rect().right - SCREEN_BUTTO
                              "START")
 
 if __name__ == '__main__':
-    pass
     # graph: GraphInterface = DiGraph()
     # graph_algo: GraphAlgoInterface = GraphAlgo(graph)
     # graph_algo.load_from_json("../data/A0.json")
@@ -605,4 +606,4 @@ if __name__ == '__main__':
     # graph.add_edge(4, 5, 1)
     # graph.add_edge(5, 3, 5)
     # print(graph_algo.get_graph())
-    # GUI("../data/A0.json")
+    GUI("../data/A0.json")

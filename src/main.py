@@ -106,7 +106,7 @@ def check3():
 
 
 if __name__ == '__main__':
-     check2()
+     check()
 
     # g = DiGraph()  # creates an empty directed graph
     # g_algo = GraphAlgo(g)
