@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#C:/Users/97252/Documents/GitHub/OOP-Ex3/src/DiGraph.py</OriginalElement>
+  <nodes>
+    <node x="666.1760847628657" y="186.59737638748737">src.GraphAlgo.GraphAlgo</node>
+    <node x="-52.79843592330974" y="289.7214934409687">src.DiGraph.DiGraph</node>
+    <node x="1177.976791120081" y="296.91624621594354">src.test_GraphAlgo.TestGraphAlgo</node>
+    <node x="277.3895055499496" y="333.72149344096874">src.test_DiGraph.TestDiGraph</node>
+    <node x="-292.9863773965691" y="289.7214934409687">src.Node.Node</node>
+    <node x="1021.7679112008069" y="-17.0">src.GraphAlgoInterface.GraphAlgoInterface</node>
+    <node x="770.008072653885" y="552.7618567103935">src.GraphGUI.GUI</node>
+    <node x="0.0" y="0.0">src.GraphInterface.GraphInterface</node>
+  </nodes>
+  <notes>
+    <note x="710.3723511604439" y="104.32896064581229">
+      <node>src.GraphAlgo.GraphAlgo</node>
+      <value>GraphAlgo implement GraphAlgointerface</value>
+      <edge>
+        <point x="-15.0" y="-171.0" />
+        <point x="-50.696266397578256" y="14.0" />
+      </edge>
+    </note>
+    <note x="303.0" y="113.0">
+      <node>src.DiGraph.DiGraph</node>
+      <value>DIGgraph implement GraphInterface</value>
+      <edge>
+        <point x="70.75" y="-149.0" />
+        <point x="159.45156407669026" y="279.0" />
+        <point x="410.0" y="279.0" />
+        <point x="0.0" y="14.0" />
+      </edge>
+    </note>
+    <note x="1311.2341069626636" y="569.0151362260343">
+      <node>src.GraphGUI.GUI</node>
+      <value>Graph Gui draw the graph</value>
+      <edge>
+        <point x="0.0" y="0.0" />
+        <point x="989.008072653885" y="599.2618567103935" />
+        <point x="1390.2341069626636" y="599.2618567103935" />
+        <point x="0.0" y="0.0" />
+      </edge>
+    </note>
+  </notes>
+  <edges>
+    <edge source="src.DiGraph.DiGraph" target="src.GraphInterface.GraphInterface" relationship="REALIZATION">
+      <point x="-70.75" y="-149.0" />
+      <point x="17.95156407669026" y="279.0" />
+      <point x="141.5" y="279.0" />
+      <point x="0.0" y="127.0" />
+    </edge>
+    <edge source="src.GraphAlgo.GraphAlgo" target="src.GraphAlgoInterface.GraphAlgoInterface" relationship="REALIZATION">
+      <point x="0.0" y="-171.0" />
+      <point x="797.6760847628657" y="213.0" />
+      <point x="1181.7679112008068" y="213.0" />
+      <point x="0.0" y="94.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="588.5" y="395.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+

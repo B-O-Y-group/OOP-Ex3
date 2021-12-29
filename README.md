@@ -70,3 +70,10 @@ then choose a json file for draw the graph on the screen.
 
 click on the button "SAVE"
 then choose the folder u want to save  the json file of the graph 
+
+
+
+
+#UML of our project 
+
+![img_3.png](img_3.png)
