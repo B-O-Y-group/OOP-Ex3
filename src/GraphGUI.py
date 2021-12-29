@@ -78,6 +78,12 @@ class Console:
             else:
                 self.con_text = f"TSP path {cities}"
 
+        if func_name == "load":
+            self.con_text = "please enter a json file"
+
+        if func_name == "save":
+            self.con_text = "please choose a folder to save"
+
     def print_shortest(self, src, dest, path, dist):
 
         self.con_text = f"The Shortest Path from {src} to {dest} is {path}. distance: {dist}"
@@ -392,8 +398,12 @@ center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
                          "ShortestPath")
 tsp_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,), "TSP")
-action_button = Button(pygame.Rect((screen.get_rect().right - SCREEN_BUTTON_R/2, screen.get_height() - 40),
+action_button = Button(pygame.Rect((screen.get_rect().right - SCREEN_BUTTON_R / 2, screen.get_height() - 40),
                                    (screen.get_rect().right, screen.get_rect().bottomright[1])), (0, 0, 0), "START")
+
+load_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
+                     "load")
+
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
