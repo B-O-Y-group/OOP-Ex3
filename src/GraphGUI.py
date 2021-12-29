@@ -71,7 +71,7 @@ class Console:
                 self.con_text = f"TSP path {cities}"
 
         if func_name == "load":
-            init_json = "please enter a json file"
+            self.con_text = "please enter a json file"
 
     def print_shortest(self, src, dest, path, dist):
         self.con_text = f"The Shortest Path from {src} to {dest} is {path}. distance: {dist}"
@@ -318,7 +318,7 @@ def display(algo: GraphAlgoInterface):
                         console.set_func("CenterPoint")
                     else:
                         center_id.clear()
-                        
+
 
                 """Actions of shortestPath button"""
                 if shortest_button.rect.collidepoint(e.pos):
