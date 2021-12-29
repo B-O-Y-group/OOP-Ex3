@@ -46,7 +46,7 @@ class Console:
         self.dest = ""
         self.con_text = "welcome to BOY Graph."
 
-    def set_func(self, func_name, src="", dest=""):
+    def set_func(self, func_name, src="", dest="", cities=""):
 
         if func_name == "ShortestPath":
             init_src = ""
@@ -63,6 +63,12 @@ class Console:
             # self.func = func_name
         if func_name == "CenterPoint":
             self.con_text = f"The {func_name} of this graph is : {center_id.__getitem__(0)}"
+
+        if func_name == "TSP":
+            if cities == "":
+                self.con_text = "choose nodes for TSP"
+            else:
+                self.con_text = f"TSP path {cities}"
 
     def print_shortest(self, src, dest, path, dist):
         self.con_text = f"The Shortest Path from {src} to {dest} is {path}. distance: {dist}"
@@ -122,7 +128,7 @@ def arrow(start, end, d, h, color):
     xn = x
     points = [(end[0], end[1]), (int(xm), int(ym)), (int(xn), int(yn))]
 
-    pygame.draw.line(screen, color, start, end, width=4)
+    pygame.draw.aaline(screen, color, start, end, 1)
     pygame.draw.polygon(screen, color, points)
 
 
@@ -148,13 +154,23 @@ def clicked_shortest(button: Button, src=None, dest=None):
     shortest_path["list"]: list = shortest_path_func[1]
     shortest_path["edges"]: list = []
     shortest_path.get("edges")
-    # list.__len__()
-    #
     print(shortest_path_func[1])
     for i in range(shortest_path["list"].__len__() - 1):
         shortest_path["edges"].append((shortest_path["list"].__getitem__(i), shortest_path["list"].__getitem__(i + 1)))
     print(shortest_path)
     console.print_shortest(src, dest, path=shortest_path["list"], dist=shortest_path["dist"])
+
+
+tsp_ans = {}
+cities = []
+
+
+def clicked_tsp(button: Button, list_cities: list[int]):
+    global tsp_ans
+    tsp_ans_func = button.func(list_cities)
+    tsp_ans["list"] = tsp_ans_func[0]
+    tsp_ans["dist"] = tsp_ans_func[1]
+    console.set_func("TSP")
 
 
 """ -------------------------> DRAW <----------------------------"""
@@ -250,8 +266,10 @@ path_src = -1
 def display(algo: GraphAlgoInterface):
     global shortest_counter, path_src
     global shortest_src_dest
+    global cities
     center_button.func = algo.centerPoint
     shortest_button.func = algo.shortest_path
+    tsp_button.func = algo.TSP
     min_max(algo.get_graph())
     node_display = -1
 
@@ -292,6 +310,12 @@ def display(algo: GraphAlgoInterface):
                     else:
                         shortest_path.clear()
                         nodes_screen.clear()
+                """Actions of TSP button"""
+                if tsp_button.rect.collidepoint(e.pos):
+                    tsp_button.press()
+                    if tsp_button.is_clicked:
+                        clicked_tsp(tsp_button, cities)
+                        # console.set_func("TSP")
 
                 """relevant methods for shortest_path"""
                 if shortest_button.is_clicked:
@@ -307,7 +331,12 @@ def display(algo: GraphAlgoInterface):
                         console.set_func("ShortestPath", src=str(path_src), dest=shortest_src_dest)
                         clicked_shortest(shortest_button, src=path_src, dest=shortest_src_dest)
                         shortest_counter = 3
-                elif not center_button.is_clicked:
+                elif tsp_button.is_clicked:
+                    for n in nodes_screen:
+                        if n.rect.collidepoint(e.pos):
+                            cities.append(n.id)
+
+                elif not center_button.is_clicked and not tsp_button.is_clicked:
                     console.welcome()
 
         screen.fill((155, 117, 117, 255))
