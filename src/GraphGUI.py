@@ -15,6 +15,14 @@ SCREEN_TOPLEFT = screen.get_rect().topleft
 SCREEN_BUTTON_R = screen.get_width() / 5
 
 
+class ActionButton:
+    def __init__(self, rect: pygame.Rect, color, text):
+        self.rect = rect
+        self.color = color
+        self.text = text
+        self.is_clicked = False
+
+
 class Button:
     def __init__(self, rect: pygame.Rect, color, text, func=None):
         self.rect = rect
@@ -46,8 +54,8 @@ class Console:
         self.dest = ""
         self.con_text = "welcome to BOY Graph."
 
-    def set_func(self, func_name, src="", dest="", cities=""):
-
+    def set_func(self, func_name, src="", dest=""):
+        global cities
         if func_name == "ShortestPath":
             init_src = ""
             init_dest = ""
@@ -65,13 +73,17 @@ class Console:
             self.con_text = f"The {func_name} of this graph is : {center_id.__getitem__(0)}"
 
         if func_name == "TSP":
-            if cities == "":
+            if cities.__len__() == 0:
                 self.con_text = "choose nodes for TSP"
             else:
                 self.con_text = f"TSP path {cities}"
 
     def print_shortest(self, src, dest, path, dist):
+
         self.con_text = f"The Shortest Path from {src} to {dest} is {path}. distance: {dist}"
+
+    def print_TSP(self, path, dist):
+        self.con_text = f"The TSP path is {path}, and total distance is {dist}"
 
 
 console = Console()
@@ -165,7 +177,8 @@ tsp_ans = {}
 cities = []
 
 
-def clicked_tsp(button: Button, list_cities: list[int]):
+def clicked_tsp(button: Button, list_cities):
+    global cities
     global tsp_ans
     tsp_ans_func = button.func(list_cities)
     tsp_ans["list"] = tsp_ans_func[0]
@@ -193,8 +206,14 @@ def draw(graph: GraphInterface, node_display=-1):
 
     """Console Draw"""
     pygame.draw.rect(screen, (222, 223, 219), ((0, screen.get_height() - 40), screen.get_rect().bottomright))
-    pygame.draw.rect(screen, (0, 0, 0), ((0, screen.get_height() - 40), screen.get_rect().bottomright), 3)
 
+    """draw Action_Button"""
+    if action_button.is_clicked:
+        pygame.draw.rect(screen, (177, 177, 177), action_button.rect)
+    else:
+        pygame.draw.rect(screen, (200, 191, 231), action_button.rect)
+
+    pygame.draw.rect(screen, (0, 0, 0), ((0, screen.get_height() - 40), screen.get_rect().bottomright), 3)
     pygame.draw.rect(screen, center_button.color, center_button.rect, 3)
     pygame.draw.rect(screen, shortest_button.color, shortest_button.rect, 3)
     pygame.draw.rect(screen, tsp_button.color, tsp_button.rect, 3)
@@ -217,6 +236,11 @@ def draw(graph: GraphInterface, node_display=-1):
     """TSP button box draw"""
     tsp_button_text = BUTTON_FONT.render(tsp_button.text, True, (0, 0, 0))
     screen.blit(tsp_button_text, (tsp_button.rect.topleft[0] + SCREEN_BUTTON_R / 3, tsp_button.rect.topleft[1] + 10))
+
+    """Action button box draw"""
+    action_button_text = BUTTON_FONT.render(action_button.text, True, (0, 0, 0))
+    screen.blit(action_button_text,
+                (action_button.rect.topleft[0] + 1, action_button.rect.topleft[1] + 12))
 
     for src in graph.get_all_v().values():
         node: Node = src
@@ -282,10 +306,15 @@ def display(algo: GraphAlgoInterface):
                 """Actions of center button"""
                 if center_button.rect.collidepoint(e.pos):
                     center_button.press()
+
                     """Stop action of other buttons"""
                     if shortest_button.is_clicked:
                         shortest_button.press()
                         shortest_path.clear()
+                    if tsp_button.is_clicked:
+                        tsp_button.press()
+                        cities.clear()
+
                     """manage button activity"""
                     if center_button.is_clicked:
                         clicked_center(center_button)
@@ -301,6 +330,9 @@ def display(algo: GraphAlgoInterface):
                         shortest_counter = 0
                         center_button.press()
                         center_id.clear()
+                    if tsp_button.is_clicked:
+                        tsp_button.press()
+                        cities.clear()
                     """manage button activity"""
                     if shortest_button.is_clicked:
                         shortest_counter = 0
@@ -313,9 +345,16 @@ def display(algo: GraphAlgoInterface):
                 """Actions of TSP button"""
                 if tsp_button.rect.collidepoint(e.pos):
                     tsp_button.press()
+                    """Stop action of other buttons"""
+                    if shortest_button.is_clicked:
+                        shortest_button.press()
+                        shortest_path.clear()
+                    if center_button.is_clicked:
+                        shortest_counter = 0
+                        center_button.press()
+                        center_id.clear()
                     if tsp_button.is_clicked:
-                        clicked_tsp(tsp_button, cities)
-                        # console.set_func("TSP")
+                        console.set_func("TSP")
 
                 """relevant methods for shortest_path"""
                 if shortest_button.is_clicked:
@@ -331,10 +370,15 @@ def display(algo: GraphAlgoInterface):
                         console.set_func("ShortestPath", src=str(path_src), dest=shortest_src_dest)
                         clicked_shortest(shortest_button, src=path_src, dest=shortest_src_dest)
                         shortest_counter = 3
+
+                    """relevant methods for TSP"""
                 elif tsp_button.is_clicked:
                     for n in nodes_screen:
                         if n.rect.collidepoint(e.pos):
                             cities.append(n.id)
+                            clicked_tsp(tsp_button, cities)
+                            break
+
 
                 elif not center_button.is_clicked and not tsp_button.is_clicked:
                     console.welcome()
@@ -348,7 +392,8 @@ center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
                          "ShortestPath")
 tsp_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,), "TSP")
-
+action_button = Button(pygame.Rect((screen.get_rect().right - SCREEN_BUTTON_R/2, screen.get_height() - 40),
+                                   (screen.get_rect().right, screen.get_rect().bottomright[1])), (0, 0, 0), "START")
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
     graph_algo: GraphAlgoInterface = GraphAlgo(graph)
