@@ -337,3 +337,4 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
     def plot_graph(self) -> None:
         gui: GraphGUI = GUI(self.graph)
+

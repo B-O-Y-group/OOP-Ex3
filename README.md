@@ -6,7 +6,7 @@ Full details in the task wiki:
 
 [Wiki](https://github.com/B-O-Y-group/OOP-Ex3/wiki)
 
-#add gui HERE 
+![img.png](img.png)
 
 
 #Data structure:
@@ -38,3 +38,35 @@ by trying all the Combinations of the faster routes for every node
 in the list we can find the best of them .  
 
 [TSP](https://github.com/B-O-Y-group/OOP-Ex3/wiki/Algorithm#tsp)
+
+
+
+#Instructions for Gui:
+click on the button "center point Algorithm"
+end the red point is the center of this graph.
+
+The Result information appears in the window at the bottom of the screen
+![img_1.png](img_1.png)
+
+
+
+click on the button "Shortest path Algorithm"
+then click on the screen for choosing a source node  
+then click on the screen for choosing a destination node 
+
+The result information appears in the window at the bottom of the screen.
+![img_2.png](img_2.png)
+
+
+click on the button "TSP Algorithm"
+then click on the screen few node to create a list for finding the best route  
+
+
+The result information appears in the window at the bottom of the screen.
+
+
+click on the button "LOAD"
+then choose a json file for draw the graph on the screen.
+
+click on the button "SAVE"
+then choose the folder u want to save  the json file of the graph 

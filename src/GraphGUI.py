@@ -222,7 +222,6 @@ class GUI:
         gfxdraw.aapolygon(screen, points, color)
         gfxdraw.filled_polygon(screen, points, color)
 
-
     def clicked_center(self, button: Button):
         global center_id
         center = button.func()
@@ -579,9 +578,8 @@ action_button = ActionButton(pygame.Rect((screen.get_rect().right - SCREEN_BUTTO
                              "START")
 
 if __name__ == '__main__':
-    pass
-    # graph: GraphInterface = DiGraph()
-    # graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    graph: GraphInterface = DiGraph()
+    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
     # graph_algo.load_from_json("../data/A0.json")
 
     # graph: GraphInterface = DiGraph()
@@ -605,4 +603,4 @@ if __name__ == '__main__':
     # graph.add_edge(4, 5, 1)
     # graph.add_edge(5, 3, 5)
     # print(graph_algo.get_graph())
-    # GUI("../data/A0.json")
+    GUI("../data/A1.json")
