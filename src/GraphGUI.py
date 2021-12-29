@@ -171,7 +171,7 @@ cities = []
 def clicked_tsp(button: Button, list_cities: list[int]):
     global tsp_ans
     tsp_ans_func = button.func(list_cities)
-    tsp_ans["list"] = tsp_ans_func.__getitem__(0)
+    tsp_ans["list"] = tsp_ans_func[0]
     tsp_ans["dist"] = tsp_ans_func[1]
     console.set_func("TSP")
 
@@ -342,7 +342,7 @@ def display(algo: GraphAlgoInterface):
                     tsp_button.press()
                     if tsp_button.is_clicked:
                         clicked_tsp(tsp_button, cities)
-                        console.set_func("TSP")
+                        # console.set_func("TSP")
 
                 """relevant methods for shortest_path"""
                 if shortest_button.is_clicked:
