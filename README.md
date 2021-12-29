@@ -69,7 +69,10 @@ The result information appears in the window at the bottom of the screen.
 
 click on the button "LOAD"
 Then select the json file for draw the graph on the screen.
-![img_5.png](img_5.png)
+![img_8.png](img_8.png)
+
+
+
 click on the button "SAVE"
 Then select the folder where you want to save the graph's json file
 ![img_7.png](img_7.png)
