@@ -15,7 +15,7 @@ BUTTON_FONT = pygame.font.SysFont("Ariel", 30)
 SAVE_LOAD_FONT = pygame.font.SysFont("Ariel", 40)
 CONSOLE_FONT = pygame.font.SysFont("Ariel", 30)
 
-screen = pygame.display.set_mode((1600, 800))
+screen = pygame.display.set_mode((1600, 800), flags=pygame.RESIZABLE)
 SCREEN_TOPLEFT = screen.get_rect().topleft
 SCREEN_BUTTON_R = screen.get_width() / 5
 RADIUS = 10
