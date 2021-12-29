@@ -1,5 +1,6 @@
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
+from timeit import default_timer as timer
 
 
 def check():
@@ -105,4 +106,19 @@ def check3():
 
 
 if __name__ == '__main__':
-    check0()
+    # check1()
+
+    g = DiGraph()  # creates an empty directed graph
+    g_algo = GraphAlgo()
+
+    list = []
+    for i in range(0, 48):
+        list.append(i)
+    g_algo.load_from_json("../data/A5.json")
+    start = timer()
+    # g_algo.load_from_json("../data/A5.json")
+    # print(g_algo.get_graph())
+
+    print(g_algo.TSP(list))
+    end = timer()
+    print(end - start)  # Time in seconds, e.g. 5.38091952400282

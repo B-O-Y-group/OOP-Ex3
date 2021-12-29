@@ -18,7 +18,7 @@ class DiGraph(GraphInterface, ABC):
     '''add to new list all edges in graph assuming that edges_out has the same value as edges_in'''
     def e_size(self) -> int:
         e_size_list = []
-        print(self.edges_out.values().__len__())
+
         for v in self.edges_out:
             for i in self.edges_out[v]:
                 e_size_list.append(i)
