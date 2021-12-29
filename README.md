@@ -43,7 +43,7 @@ in the list we can find the best of them .
 
 #Instructions for Gui:
 click on the button "center point Algorithm"
-end the red point is the center of this graph.
+And the red point is the center of this graph.
 
 The Result information appears in the window at the bottom of the screen
 ![img_1.png](img_1.png)
@@ -51,25 +51,25 @@ The Result information appears in the window at the bottom of the screen
 
 
 click on the button "Shortest path Algorithm"
-then click on the screen for choosing a source node  
-then click on the screen for choosing a destination node 
+Then click on the screen for choosing a source node  
+Then click on the screen for choosing a destination node 
 
 The result information appears in the window at the bottom of the screen.
 ![img_2.png](img_2.png)
 
 
-click on the button "TSP Algorithm"
-then click on the screen few node to create a list for finding the best route  
+Click on the button "TSP Algorithm"
+Then click on a vertex on the screen to create a list to find the best route  
 then click on "START"
 ![img_6.png](img_6.png)
 The result information appears in the window at the bottom of the screen.
 
 
 click on the button "LOAD"
-then choose a json file for draw the graph on the screen.
+Then select the json file for draw the graph on the screen.
 ![img_5.png](img_5.png)
 click on the button "SAVE"
-then choose the folder u want to save the json file of the graph 
+Then select the folder where you want to save the graph's json file
 ![img_7.png](img_7.png)
 
 
