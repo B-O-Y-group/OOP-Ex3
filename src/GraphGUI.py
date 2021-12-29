@@ -2,19 +2,56 @@ import pygame
 import os
 from GraphAlgo import *
 from DiGraph import *
-from pygame.constants import RESIZABLE
 import math
+from pygame import gfxdraw
 from tkinter import filedialog as fd
 
 pygame.font.init()
-FONT = pygame.font.SysFont("Ariel", 22)
+FONT = pygame.font.SysFont("Ariel", 20)
 BUTTON_FONT = pygame.font.SysFont("Ariel", 30)
 SAVE_LOAD_FONT = pygame.font.SysFont("Ariel", 40)
 CONSOLE_FONT = pygame.font.SysFont("Ariel", 30)
 
-screen = pygame.display.set_mode((800, 500), flags=RESIZABLE)  # check!
+screen = pygame.display.set_mode((1600, 800))
 SCREEN_TOPLEFT = screen.get_rect().topleft
 SCREEN_BUTTON_R = screen.get_width() / 5
+RADIUS = 10
+
+
+# this algorithm is not mine. https://stackoverflow.com/questions/13053061/circle-line-intersection-points
+# algorithm to find the intersection point of segment and circle.
+def node_line_inter(pointA, pointB, pointC, radius):
+    ans = []
+
+    ba_x = pointB[0] - pointA[0]
+    ba_y = pointB[1] - pointA[1]
+
+    ca_x = pointC[0] - pointA[0]
+    ca_y = pointC[1] - pointA[1]
+
+    a = (ba_x * ba_x) + (ba_y * ba_y)
+    bBy2 = (ba_x * ca_x) + (ba_y * ca_y)
+    c = (ca_x * ca_x) + (ca_y * ca_y) - (radius * radius)
+
+    pBy2 = bBy2 / a
+    q = c / a
+
+    disc = (pBy2 * pBy2) - q
+    if disc < 0:
+        return None
+
+    tmp_sqrt = math.sqrt(disc)
+    abScalingF_1 = -pBy2 + tmp_sqrt
+    abScalingF_2 = -pBy2 - tmp_sqrt
+
+    p1 = (pointA[0] - (ba_x * abScalingF_1), pointA[1] - (ba_y * abScalingF_1))
+    ans.append(p1)
+    if disc == 0:
+        return ans
+
+    p2 = (pointA[0] - (ba_x * abScalingF_2), pointA[1] - (ba_y * abScalingF_2))
+    ans.append(p2)
+    return ans
 
 
 class ActionButton:
@@ -138,17 +175,19 @@ start_tsp = False
 
 
 class GUI:
+    # def __init__(self, graph):
+    #     self.graph_algo = GraphAlgo(graph)
+    #     self.display(self.graph_algo)
 
-    def __init__(self, file: str):
+    def __init__(self, file: str = None):
         graph: GraphInterface = DiGraph()
         graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-        json_file = file
         graph_algo.load_from_json(file)
         self.display(graph_algo)
 
     def init_graph(self, file: str):
-        graph_algo.load_from_json(file)
-        self.display(graph_algo)
+        self.graph_algo.load_from_json(file)
+        self.display(self.graph_algo)
 
     def my_scale(self, data, x=False, y=False):
         if x:
@@ -178,10 +217,11 @@ class GUI:
         xn = x
         points = [(end[0], end[1]), (int(xm), int(ym)), (int(xn), int(yn))]
 
-        pygame.draw.aaline(screen, color, start, end, 1)
-        pygame.draw.polygon(screen, color, points)
+        pygame.draw.aaline(screen, color, start, end, 4)
 
-    # console = 'Graph {algo}'.format(algo="")
+        gfxdraw.aapolygon(screen, points, color)
+        gfxdraw.filled_polygon(screen, points, color)
+
 
     def clicked_center(self, button: Button):
         global center_id
@@ -273,17 +313,17 @@ class GUI:
         """TSP button box draw"""
         tsp_button_text = BUTTON_FONT.render(tsp_button.text, True, (0, 0, 0))
         screen.blit(tsp_button_text,
-                    (tsp_button.rect.topleft[0] + SCREEN_BUTTON_R / 3, tsp_button.rect.topleft[1] + 10))
+                    (tsp_button.rect.topleft[0] + 10, tsp_button.rect.topleft[1] + 10))
 
         """LOAD button box draw"""
         load_button_text = SAVE_LOAD_FONT.render(load_button.text, True, (253, 196, 0))
         screen.blit(load_button_text,
-                    (load_button.rect.topleft[0] + SCREEN_BUTTON_R / 4, load_button.rect.topleft[1] + 7))
+                    (load_button.rect.topleft[0] + SCREEN_BUTTON_R / 4 + 40, load_button.rect.topleft[1] + 7))
 
         """SAVE button box draw"""
         save_button_text = SAVE_LOAD_FONT.render(save_button.text, True, (253, 196, 0))
         screen.blit(save_button_text,
-                    (save_button.rect.topleft[0] + SCREEN_BUTTON_R / 4, save_button.rect.topleft[1] + 7))
+                    (save_button.rect.topleft[0] + SCREEN_BUTTON_R / 4 + 40, save_button.rect.topleft[1] + 7))
 
         """Action button box draw"""
         if action_button.show:
@@ -293,52 +333,85 @@ class GUI:
                 action_button.text = "START"
             action_button_text = BUTTON_FONT.render(action_button.text, True, (0, 0, 0))
             screen.blit(action_button_text,
-                        (action_button.rect.topleft[0] + 1, action_button.rect.topleft[1] + 12))
+                        (action_button.rect.topleft[0] + 40, action_button.rect.topleft[1] + 12))
 
         for src in graph.get_all_v().values():
+            global RADIUS
             node: Node = src
+
             x = self.my_scale(data=node.pos[0], x=True)
             y = self.my_scale(data=node.pos[1], y=True)
             src_text = FONT.render(str(node.id), True, (0, 0, 0))
 
-            node_radius = 10
+            v = graph.v_size()
+
+            node_radius = RADIUS
             nodes_screen.append(NodeScreen(pygame.Rect((x - node_radius, y - node_radius), (20, 20)), node.id))
 
-            node_center = (int(node.pos[0]), int(node.pos[1]))
-            # print(node)
+            gfxdraw.aacircle(screen, int(x), int(y), node_radius, (0, 0, 0))
 
-            if (node.id) in center_id:
-                pygame.draw.circle(screen, color=(250, 0, 0, 255), center=(x, y), radius=node_radius)
+            if node.id in center_id:
+                gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 0, 0))
+                gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 0, 0))
+
 
             elif shortest_path.get("list"):
                 if node.id in shortest_path["list"]:
-                    pygame.draw.circle(screen, color=(192, 250, 247, 255), center=(x, y), radius=node_radius)
+                    gfxdraw.aacircle(screen, x=x, y=y, r=node_radius - 1, color=(192, 250, 247))
+                    gfxdraw.filled_circle(screen, x=x, y=y, r=node_radius - 1, color=(192, 250, 247))
                 else:
-                    pygame.draw.circle(screen, color=(250, 204, 58, 255), center=(x, y), radius=node_radius)
+                    gfxdraw.aacircle(screen, x=x, y=y, r=node_radius - 1, color=(250, 204, 58))
+                    gfxdraw.filled_circle(screen, x=x, y=y, r=node_radius - 1, color=(250, 204, 58))
 
             else:
-                pygame.draw.circle(screen, color=(250, 204, 58, 255), center=(x, y), radius=node_radius)
+                gfxdraw.aacircle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
+                gfxdraw.filled_circle(screen, int(x), int(y), node_radius - 1, (250, 204, 58))
 
             screen.blit(src_text, (x - (node_radius / 2), y - (node_radius / 2)))
-            for dest in graph.all_out_edges_of_node(node.id):
-                dest: Node = graph.get_all_v()[dest]
-                dest_x = self.my_scale(data=dest.pos[0], x=True)
-                dest_y = self.my_scale(data=dest.pos[1], y=True)
-                if shortest_path.get("list"):
+            try:
+                for dest in graph.all_out_edges_of_node(node.id):
 
-                    if (node.id, dest.id) in shortest_path["edges"]:
-                        self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(192, 250, 247))
+                    dest: Node = graph.get_all_v()[dest]
+                    dest_x = self.my_scale(data=dest.pos[0], x=True)
+                    dest_y = self.my_scale(data=dest.pos[1], y=True)
+
+                    src_arrow = ()
+                    dest_arrow = ()
+
+                    collition_dest = node_line_inter((x, y), (dest_x, dest_y), (dest_x, dest_y), node_radius)
+
+                    for i in range(collition_dest.__len__() - 1):
+                        if math.dist((x, y), collition_dest[i]) < math.dist((x, y), collition_dest[i + 1]):
+                            dest_arrow = collition_dest[i]
+                        else:
+                            dest_arrow = collition_dest[i + 1]
+
+                    collition_src = node_line_inter((dest_x, dest_y), (x, y), (x, y), node_radius)
+
+                    for i in range(collition_src.__len__() - 1):
+                        if math.dist((dest_x, dest_y), collition_src[i]) <= math.dist((dest_x, dest_y),
+                                                                                      collition_src[i + 1]):
+                            src_arrow = collition_src[i]
+                        else:
+                            src_arrow = collition_src[i + 1]
+
+                    if shortest_path.get("list"):
+
+                        if (node.id, dest.id) in shortest_path["edges"]:
+                            self.arrow(src_arrow, dest_arrow, 17, 7, color=(192, 250, 247))
+                        else:
+                            self.arrow(src_arrow, dest_arrow, 17, 7, color=(255, 255, 255))
                     else:
-                        self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
-                else:
-                    self.arrow((x, y), (dest_x, dest_y), 17, 7, color=(255, 255, 255))
+                        self.arrow(src_arrow, dest_arrow, 17, 7, color=(255, 255, 255))
+            except TypeError:
+                pass
 
     """------------------> END Draw Methods <-----------------"""
 
     shortest_counter = 0
     path_src = -1
 
-    def display(self, algo: GraphAlgoInterface):
+    def display(self, algo):
         global shortest_counter, path_src
         global shortest_src_dest
         global cities, start_tsp
@@ -410,6 +483,15 @@ class GUI:
                             self.init_graph(filename)
                             run = False
 
+                    """Actions of SAVE button"""
+                    if save_button.rect.collidepoint(e.pos):
+                        save_button.press()
+                        if save_button.is_clicked:
+                            filename = fd.asksaveasfilename()
+                            print("PATH --> ", filename)
+                            save_button.is_clicked = False
+                            self.graph_algo.save_to_json(filename)
+
                     """relevant methods for shortest_path"""
                     if shortest_button.is_clicked:
                         for n in nodes_screen:
@@ -443,7 +525,7 @@ class GUI:
                         action_button.show = False
                         console.welcome()
 
-            screen.fill((155, 117, 117, 255))
+            screen.fill((210, 180, 140))
             self.draw(algo.get_graph(), node_display)
             pygame.display.update()
 
@@ -482,11 +564,12 @@ class GUI:
                 tsp_button.press()
                 cities.clear()
 
-center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0, 0), "CenterPoint")
+
+center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0, 0), "Center Point Algorithm")
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
-                         "ShortestPath")
+                         "Shortest Path Algorithm")
 tsp_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
-                    "TSP")
+                    "TSP Algorithm")
 load_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 3, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
                      "LOAD")
 save_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 4, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
@@ -496,9 +579,10 @@ action_button = ActionButton(pygame.Rect((screen.get_rect().right - SCREEN_BUTTO
                              "START")
 
 if __name__ == '__main__':
-    graph: GraphInterface = DiGraph()
-    graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-    graph_algo.load_from_json("../data/A0.json")
+    pass
+    # graph: GraphInterface = DiGraph()
+    # graph_algo: GraphAlgoInterface = GraphAlgo(graph)
+    # graph_algo.load_from_json("../data/A0.json")
 
     # graph: GraphInterface = DiGraph()
     # graph_algo: GraphAlgoInterface = GraphAlgo(graph)
@@ -521,4 +605,4 @@ if __name__ == '__main__':
     # graph.add_edge(4, 5, 1)
     # graph.add_edge(5, 3, 5)
     # print(graph_algo.get_graph())
-    GUI("../data/A0.json")
+    # GUI("../data/A0.json")
