@@ -60,17 +60,17 @@ The result information appears in the window at the bottom of the screen.
 
 click on the button "TSP Algorithm"
 then click on the screen few node to create a list for finding the best route  
-
-
+then click on "START"
+![img_6.png](img_6.png)
 The result information appears in the window at the bottom of the screen.
 
 
 click on the button "LOAD"
 then choose a json file for draw the graph on the screen.
-
+![img_5.png](img_5.png)
 click on the button "SAVE"
-then choose the folder u want to save  the json file of the graph 
-
+then choose the folder u want to save the json file of the graph 
+![img_7.png](img_7.png)
 
 
 
