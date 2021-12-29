@@ -161,14 +161,15 @@ def clicked_shortest(button: Button, src=None, dest=None):
     console.print_shortest(src, dest, path=shortest_path["list"], dist=shortest_path["dist"])
 
 
-tsp_ans = ()
+tsp_ans = {}
+cities = []
 
 
-def clicked_tsp(button: Button, cities: list):
+def clicked_tsp(button: Button, list_cities: list[int]):
     global tsp_ans
-    tsp_ans_func = button.func(cities)
-    tsp_ans.__add__(tsp_ans_func[0])
-    tsp_ans.__add__(tsp_ans_func[1])
+    tsp_ans_func = button.func(list_cities)
+    tsp_ans["list"] = tsp_ans_func.__getitem__(0)
+    tsp_ans["dist"] = tsp_ans_func[1]
     console.set_func("TSP")
 
 
@@ -265,8 +266,10 @@ path_src = -1
 def display(algo: GraphAlgoInterface):
     global shortest_counter, path_src
     global shortest_src_dest
+    global cities
     center_button.func = algo.centerPoint
     shortest_button.func = algo.shortest_path
+    tsp_button.func = algo.TSP
     min_max(algo.get_graph())
     node_display = -1
 
@@ -307,10 +310,11 @@ def display(algo: GraphAlgoInterface):
                     else:
                         shortest_path.clear()
                         nodes_screen.clear()
-
+                """Actions of TSP button"""
                 if tsp_button.rect.collidepoint(e.pos):
                     tsp_button.press()
                     if tsp_button.is_clicked:
+                        clicked_tsp(tsp_button, cities)
                         console.set_func("TSP")
 
                 """relevant methods for shortest_path"""
@@ -327,6 +331,11 @@ def display(algo: GraphAlgoInterface):
                         console.set_func("ShortestPath", src=str(path_src), dest=shortest_src_dest)
                         clicked_shortest(shortest_button, src=path_src, dest=shortest_src_dest)
                         shortest_counter = 3
+                elif tsp_button.is_clicked:
+                    for n in nodes_screen:
+                        if n.rect.collidepoint(e.pos):
+                            cities.append(n.id)
+
                 elif not center_button.is_clicked and not tsp_button.is_clicked:
                     console.welcome()
 
