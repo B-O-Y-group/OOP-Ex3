@@ -194,7 +194,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             self.intDist(dist)
 
             self.all_path(curr.id, dist)
-            print(dist)
+            # print(dist)
             max_of_the_list = max(dist)
 
             if max_of_the_list < final_center:
