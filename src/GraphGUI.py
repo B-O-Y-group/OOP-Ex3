@@ -210,6 +210,16 @@ def draw(graph: GraphInterface, node_display=-1):
     else:
         pygame.draw.rect(screen, (222, 223, 219), tsp_button.rect)
 
+    if load_button.is_clicked:
+        pygame.draw.rect(screen, (177, 177, 177), load_button.rect)
+    else:
+        pygame.draw.rect(screen, (222, 223, 219), load_button.rect)
+
+    if save_button.is_clicked:
+        pygame.draw.rect(screen, (177, 177, 177), save_button.rect)
+    else:
+        pygame.draw.rect(screen, (222, 223, 219), save_button.rect)
+
     """Console Draw"""
     pygame.draw.rect(screen, (222, 223, 219), ((0, screen.get_height() - 40), screen.get_rect().bottomright))
 
@@ -223,6 +233,8 @@ def draw(graph: GraphInterface, node_display=-1):
     pygame.draw.rect(screen, center_button.color, center_button.rect, 3)
     pygame.draw.rect(screen, shortest_button.color, shortest_button.rect, 3)
     pygame.draw.rect(screen, tsp_button.color, tsp_button.rect, 3)
+    pygame.draw.rect(screen, tsp_button.color, load_button.rect, 3)
+    pygame.draw.rect(screen, tsp_button.color, save_button.rect, 3)
 
     console_text = CONSOLE_FONT.render(console.con_text, True, (0, 0, 0))
     screen.blit(console_text, (5, screen.get_height() - 30))
@@ -248,6 +260,14 @@ def draw(graph: GraphInterface, node_display=-1):
     screen.blit(action_button_text,
                 (action_button.rect.topleft[0] + 1, action_button.rect.topleft[1] + 12))
 
+    """ load button box draw """
+    load_button_text = BUTTON_FONT.render(load_button.text, True, (0, 0, 0))
+    screen.blit(load_button_text,
+                (load_button.rect.topleft[0] + SCREEN_BUTTON_R + 35, load_button.rect.topleft[1] + 10))
+    """ save button box draw"""
+    save_button_text = BUTTON_FONT.render(save_button.text, True, (0, 0, 0))
+    screen.blit(save_button_text,
+                (save_button.rect.topleft[0] + SCREEN_BUTTON_R + 130, save_button.rect.topleft[1] + 10))
     for src in graph.get_all_v().values():
         node: Node = src
         x = my_scale(data=node.pos[0], x=True)
@@ -402,7 +422,9 @@ action_button = Button(pygame.Rect((screen.get_rect().right - SCREEN_BUTTON_R / 
                                    (screen.get_rect().right, screen.get_rect().bottomright[1])), (0, 0, 0), "START")
 
 load_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
-                     "load")
+                     "Load")
+save_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 2, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0,),
+                     "Save")
 
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
