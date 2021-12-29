@@ -126,7 +126,6 @@ def min_max(graph: GraphInterface = None):
     max_y = max(list(graph.get_all_v().values()), key=lambda n: n.pos[1]).pos[1]
 
 
-
 shortest_path = {}
 shortest_src_dest = -1
 center_id = []
@@ -137,16 +136,14 @@ cities = []
 start_tsp = False
 
 
-
-
 class GUI:
 
-    def __init__(self, file:str):
+    def __init__(self, file: str):
         graph: GraphInterface = DiGraph()
         graph_algo: GraphAlgoInterface = GraphAlgo(graph)
-        graph_algo.load_from_json(file)
+        json_file = file
+        graph_algo.load_from_json(json_file)
         self.display(graph_algo)
-
 
     def my_scale(self, data, x=False, y=False):
         if x:
@@ -179,8 +176,6 @@ class GUI:
         pygame.draw.aaline(screen, color, start, end, 1)
         pygame.draw.polygon(screen, color, points)
 
-
-
     # console = 'Graph {algo}'.format(algo="")
 
     def clicked_center(self, button: Button):
@@ -201,8 +196,6 @@ class GUI:
                 (shortest_path["list"].__getitem__(i), shortest_path["list"].__getitem__(i + 1)))
         print(shortest_path)
         console.print_shortest(src, dest, path=shortest_path["list"], dist=shortest_path["dist"])
-
-
 
     def clicked_tsp(self, button: Button, list_cities):
         global cities
@@ -362,12 +355,7 @@ class GUI:
                         action_button.show = False
 
                         """Stop action of other buttons"""
-                        if shortest_button.is_clicked:
-                            shortest_button.press()
-                            shortest_path.clear()
-                        if tsp_button.is_clicked:
-                            tsp_button.press()
-                            cities.clear()
+                        self.stop_other_buttons(center=True)
 
                         """manage button activity"""
                         if center_button.is_clicked:
@@ -383,13 +371,8 @@ class GUI:
                         action_button.start = False
                         action_button.insert = True
                         """Stop action of other buttons"""
-                        if center_button.is_clicked:
-                            shortest_counter = 0
-                            center_button.press()
-                            center_id.clear()
-                        if tsp_button.is_clicked:
-                            tsp_button.press()
-                            cities.clear()
+                        self.stop_other_buttons(shortest=True)
+
                         """manage button activity"""
                         if shortest_button.is_clicked:
                             shortest_counter = 0
@@ -406,15 +389,15 @@ class GUI:
                         action_button.insert = False
                         action_button.start = True
                         """Stop action of other buttons"""
-                        if shortest_button.is_clicked:
-                            shortest_button.press()
-                            shortest_path.clear()
-                        if center_button.is_clicked:
-                            shortest_counter = 0
-                            center_button.press()
-                            center_id.clear()
+                        self.stop_other_buttons(tsp=True)
+
+                        """manage button activity"""
                         if tsp_button.is_clicked:
                             console.set_func("TSP")
+
+                    """Actions of shortestPath button"""
+                    if load_button.rect.collidepoint(e.pos):
+                        load_button.press()
 
                     """relevant methods for shortest_path"""
                     if shortest_button.is_clicked:
@@ -453,6 +436,31 @@ class GUI:
             self.draw(algo.get_graph(), node_display)
             pygame.display.update()
 
+    def stop_other_buttons(self, tsp=False, shortest=False, center=False):
+        if center:
+            if shortest_button.is_clicked:
+                shortest_button.press()
+                shortest_path.clear()
+            if tsp_button.is_clicked:
+                tsp_button.press()
+                cities.clear()
+        if shortest:
+            if center_button.is_clicked:
+                center_button.press()
+                center_id.clear()
+            if tsp_button.is_clicked:
+                tsp_button.press()
+                cities.clear()
+        if tsp:
+            if shortest_button.is_clicked:
+                shortest_button.press()
+                shortest_path.clear()
+            if center_button.is_clicked:
+                shortest_counter = 0
+                center_button.press()
+                center_id.clear()
+
+
 center_button = Button(pygame.Rect(SCREEN_TOPLEFT, (SCREEN_BUTTON_R, 40)), (0, 0, 0), "CenterPoint")
 shortest_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R, 0), (SCREEN_BUTTON_R, 40)), (0, 0, 0),
                          "ShortestPath")
@@ -465,7 +473,6 @@ save_button = Button(pygame.Rect((SCREEN_TOPLEFT[0] + SCREEN_BUTTON_R * 4, 0), (
 action_button = ActionButton(pygame.Rect((screen.get_rect().right - SCREEN_BUTTON_R / 2, screen.get_height() - 40),
                                          (screen.get_rect().right, screen.get_rect().bottomright[1])), (0, 0, 0),
                              "START")
-
 
 if __name__ == '__main__':
     graph: GraphInterface = DiGraph()
