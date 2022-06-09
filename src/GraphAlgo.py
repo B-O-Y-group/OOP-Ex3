@@ -1,4 +1,4 @@
-from GraphGUI import *
+ifrom GraphGUI import *
 from GraphAlgoInterface import *
 import copy
 import math
@@ -334,3 +334,5 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
     def plot_graph(self) -> None:
         GUI(self.graph)
+
+
